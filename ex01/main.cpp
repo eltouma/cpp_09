@@ -6,22 +6,26 @@
 /*   By: eltouma <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 16:03:22 by eltouma           #+#    #+#             */
-/*   Updated: 2024/12/05 19:14:52 by eltouma          ###   ########.fr       */
+/*   Updated: 2024/12/05 20:12:28 by eltouma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "RPN.hpp"
 #include <cstring>
+#include <cstdlib>
+#include <iomanip>
+#include <limits.h>
+#include <cerrno>
 
 int	checkParams(char *s)
 {
 	std::string	str;
 	size_t	size;
-	int	zero;
+	long	nb;
+	char	*endptr;
 
 	str = s;
 	size = str.length();
-	zero = 0;
 	for (size_t i = 0; i < size; i++)
 	{
 		if (!isdigit(str[i]))
@@ -33,19 +37,15 @@ int	checkParams(char *s)
 					if (!isdigit(str[j]))
 						return (1);
 				}
-				return (0);
+				break ;
 			}
 			if (!(str[i] == '+' && str[i] == '-' && str[i] == '\\' && str[i] == '*') && size > 1)
 				return (1);
 		}
-		if (isdigit(str[i]) && size > 1)
-		{
-			for (;str[i] == '0'; i++)
-				zero = 1;
-			if (zero && str[i - 1] != '0')
-				return (1);
-		}
 	}
+	nb = strtol(str.c_str(), &endptr, 10);
+	if (nb < INT_MIN || nb > 10)
+		return (1);
 	return (0);
 }
 
