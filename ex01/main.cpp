@@ -6,17 +6,15 @@
 /*   By: eltouma <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 16:03:22 by eltouma           #+#    #+#             */
-/*   Updated: 2024/12/06 11:40:58 by eltouma          ###   ########.fr       */
+/*   Updated: 2024/12/06 13:54:25 by eltouma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "RPN.hpp"
 #include <cstring>
 #include <cstdlib>
-#include <iomanip>
 #include <limits.h>
 #include <cerrno>
-#include <stack>
 #include <list>
 
 double	doOp(double first, double second, char op)
@@ -37,7 +35,7 @@ double	doOp(double first, double second, char op)
 	return (0);
 }
 
-int	checkParams(char *s, std::stack<double, std::list<double> > &stck)
+int	checkInput(char *s, std::list<double> &lst)
 {
 	std::string	str;
 	size_t	size;
@@ -51,23 +49,23 @@ int	checkParams(char *s, std::stack<double, std::list<double> > &stck)
 	size = str.length();
 	if ((str[0] == '+' || str[0] == '-' || str[0] == '/' || str[0] == '*') && size == 1)
 	{
-		if (stck.size() < 2)
+		if (lst.size() < 2)
 			return (1);
-		first = stck.top();
-		stck.pop();
-		second = stck.top();
-		stck.pop();
+		first = lst.back();
+		lst.pop_back();
+		second = lst.back();
+		lst.pop_back();
 		result  = doOp(first, second, str[0]);
-		stck.push(result);
+		lst.push_back(result);
 		return (0);
 	}
 	errno = 0;
 	nb = strtol(str.c_str(), &endptr, 10);
 	if (endptr == str.c_str() || *endptr != '\0')
 		return (1);
-	if (errno == ERANGE || nb < INT_MIN || nb > 10)
+	if (errno == ERANGE || nb < INT_MIN || nb > 9)
 		return (1);
-	stck.push(nb);
+	lst.push_back(nb);
 	return (0);
 }
 
@@ -75,20 +73,20 @@ int	main(int argc, char **argv)
 {
 	try {
 		char	*input;
-		std::stack<double, std::list<double> >	stck;
+		std::list<double>	lst;
 
 		if (argc != 2)
 			return (std::cerr << "Error\nWrong amount of arguments" << std::endl, 1);
 		input = strtok(argv[1], " ");
 		while (input != NULL)
 		{
-			if (checkParams(input, stck))
+			if (checkInput(input, lst))
 				return (std::cerr << "Error" << std::endl, 1);
 			input = strtok(NULL, " ");
 		}
-		if (stck.size() != 1)
+		if (lst.size() != 1)
 			return (std::cerr << "Error: stack size is greater than 1 at the end" << std::endl, 1);
-		std::cout << stck.top() << std::endl;
+		std::cout << lst.back() << std::endl;
 	}
 	catch (std::exception &e)
 	{
