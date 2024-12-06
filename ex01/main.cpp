@@ -6,7 +6,7 @@
 /*   By: eltouma <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 16:03:22 by eltouma           #+#    #+#             */
-/*   Updated: 2024/12/05 21:36:44 by eltouma          ###   ########.fr       */
+/*   Updated: 2024/12/06 11:40:58 by eltouma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,13 +26,13 @@ double	doOp(double first, double second, char op)
 		case '+':
 			return (first + second);
 		case '-':
-			return (first - second);
+			return (second - first);
 		case '*':
 			return (first * second);
 		case '/':
-			if (second == 0)
+			if (first == 0)
 				throw std::invalid_argument("ZeroDivisionError (divided by 0)");
-			return (first / second);
+			return (second / first);
 	}
 	return (0);
 }
@@ -54,12 +54,10 @@ int	checkParams(char *s, std::stack<double, std::list<double> > &stck)
 		if (stck.size() < 2)
 			return (1);
 		first = stck.top();
-		std::cout << "first: " << first << "\n";
 		stck.pop();
 		second = stck.top();
-		std::cout << "second: " << second << "\n";
 		stck.pop();
-		result  = doOp(second, first, str[0]);
+		result  = doOp(first, second, str[0]);
 		stck.push(result);
 		return (0);
 	}
@@ -76,30 +74,21 @@ int	checkParams(char *s, std::stack<double, std::list<double> > &stck)
 int	main(int argc, char **argv)
 {
 	try {
-	std::stack<double, std::list<double> >	stck;
-	if (argc != 2)
-	{
-		std::cerr << "Error\nWrong amount of arguments" << std::endl;
-		return (1);
-	}
-	char	*input;
-	input = strtok(argv[1], " ");	
-	while (input != NULL)
-	{
-		std::cout << input << "\n";
-		if (checkParams(input, stck))
+		char	*input;
+		std::stack<double, std::list<double> >	stck;
+
+		if (argc != 2)
+			return (std::cerr << "Error\nWrong amount of arguments" << std::endl, 1);
+		input = strtok(argv[1], " ");
+		while (input != NULL)
 		{
-			std::cerr << "Reponse du code: non\n";
-			return (1);
+			if (checkParams(input, stck))
+				return (std::cerr << "Error" << std::endl, 1);
+			input = strtok(NULL, " ");
 		}
-		input = strtok(NULL, " ");	
-	}
 		if (stck.size() != 1)
-		{
-			std::cerr << "J'ai mis non Mathieu"  << std::endl;
-			return (1);
-		}
-		std::cout << "result: " << stck.top() << std::endl;
+			return (std::cerr << "Error: stack size is greater than 1 at the end" << std::endl, 1);
+		std::cout << stck.top() << std::endl;
 	}
 	catch (std::exception &e)
 	{
