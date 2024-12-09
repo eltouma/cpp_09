@@ -6,7 +6,7 @@
 /*   By: eltouma <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 16:03:22 by eltouma           #+#    #+#             */
-/*   Updated: 2024/12/06 18:29:51 by eltouma          ###   ########.fr       */
+/*   Updated: 2024/12/09 13:42:17 by eltouma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ int	main(int argc, char **argv)
 	try {
 		char	*input;
 		std::vector<int>	vect;
+		int	last;
 
 		if (argc != 2)
 			return (std::cerr << "Error\nWrong amount of arguments" << std::endl, 1);
@@ -55,6 +56,23 @@ int	main(int argc, char **argv)
 			i += 1;
 			input = strtok(NULL, " ");
 		}
+		if (vect.size() & 1)
+		{
+			std::cout << "last = " << vect.back()<< "\n";
+			last = vect.back();
+			vect.pop_back();
+			std::cout << "vect.size() vaut " << vect.size() << " c'est impair\n";
+			std::cout << "now last = " << vect.back() << "\n";
+		}
+		else
+			std::cout << "vect.size() vaut " << vect.size() << " c'est pair\n";
+		for (size_t j = 0; j < vect.size(); j += 2)
+		{
+			if (vect[j] < vect[j + 1]) 
+				std::swap(vect[j], vect[j + 1]);
+		}
+		for (size_t j = 0; j < vect.size(); j += 1)
+			std::cout << vect[j] << " ";
 	}
 	catch (std::exception &e)
 	{
