@@ -6,7 +6,7 @@
 /*   By: ahayon <ahayon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 16:03:22 by eltouma           #+#    #+#             */
-/*   Updated: 2024/12/09 16:09:52 by eltouma          ###   ########.fr       */
+/*   Updated: 2024/12/09 21:01:34 by ahayon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,21 +37,42 @@ int	checkInput(char *s, std::vector<int> &vect)
 	return (0);
 }
 
-int	sortPairs(std::vector<int> &vect)
+void	sortPairs(std::vector<int> &vect)
 {
-	for (unsigned long i = 0; i < vect.size(); i += 2)
+	// for (unsigned long i = 0; i < vect.size(); i += 2)
+	// {
+	// 	for (unsigned long j = i + 2; j < vect.size(); j+= 2)
+	// 	{
+	// 		if (vect[i] > vect[j])
+	// 		{
+	// 			std::swap(vect[i], vect[j]);
+	// 			std::swap(vect[i + 1], vect[j + 1]);
+	// 			return (0);
+	// 		}
+	// 	}
+	// }
+	// return (1);
+	for (unsigned long i = 2; i < vect.size(); i *= 2)
 	{
-		for (unsigned long j = i + 2; j < vect.size(); j+= 2)
+		unsigned long k = i;
+		for (unsigned long j = (i / 2); k <= vect.size(); j += i)
 		{
-			if (vect[i] > vect[j])
+			if (vect[j - 1] > vect[k - 1])
 			{
-				std::swap(vect[i], vect[j]);
-				std::swap(vect[i + 1], vect[j + 1]);
-				return (0);
+				std::cout << "boucle swap\n";
+				unsigned long l = 0;
+				while (l < (k - j))
+				{
+					std::swap(vect[j - l - 1], vect[k - l - 1]);
+					l++;
+				}
 			}
+			k += i;
 		}
+		std::cout << "\nIteration of sorting pairs:\n";
+		for (std::vector<int>::iterator it = vect.begin(); it != vect.end(); it++)
+			std::cout << *it << " ";
 	}
-	return (1);
 }
 
 int	main(int argc, char **argv)
@@ -80,7 +101,7 @@ int	main(int argc, char **argv)
 		}
 		if (vect.size() & 1)
 		{
-			std::cout << "last = " << vect.back()<< "\n";
+			std::cout << "last = " << vect.back() << "\n";
 			std::cout << "vect.size() vaut " << vect.size() << " c'est impair\n";
 			last = vect.back();
 			vect.pop_back();
@@ -89,13 +110,13 @@ int	main(int argc, char **argv)
 		else
 			std::cout << "vect.size() vaut " << vect.size() << " c'est pair\n";
 
-		for (size_t i = 0; i != vect.size(); i += 2)
-		{
-			if (vect[i] < vect[i + 1]) 
-				std::swap(vect[i], vect[i + 1]);
+		// for (size_t i = 0; i != vect.size(); i += 2)
+		// {
+		// 	if (vect[i] < vect[i + 1]) 
+		// 		std::swap(vect[i], vect[i + 1]);
 
-		}
-		while (!sortPairs(vect));
+		// }
+		sortPairs(vect);
 		std::cout << "\nAfter sorting pairs:\n";
 		for (it = vect.begin(); it != vect.end(); it++)
 			std::cout << *it << " ";
@@ -106,7 +127,6 @@ int	main(int argc, char **argv)
 			pendingVect = vect.at(i + 1);
 			pending.push_back(pendingVect);
 			main.push_back(mainVect);
-
 		}
 		vect.clear();
 		main.insert(main.begin(), pending.front());
