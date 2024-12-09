@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eltouma <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: ahayon <ahayon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 16:03:22 by eltouma           #+#    #+#             */
-/*   Updated: 2024/12/09 15:15:03 by eltouma          ###   ########.fr       */
+/*   Updated: 2024/12/09 15:58:31 by ahayon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,13 +37,30 @@ int	checkInput(char *s, std::vector<int> &vect)
 	return (0);
 }
 
+int	sortPairs(std::vector<int> &vect)
+{
+	for (unsigned long i = 0; i < vect.size(); i += 2)
+	{
+		for (unsigned long j = i + 2; j < vect.size(); j+= 2)
+		{
+			if (vect[i] > vect[j])
+			{
+				std::swap(vect[i], vect[j]);
+				std::swap(vect[i + 1], vect[j + 1]);
+				return (0);
+			}
+		}
+	}
+	return (1);
+}
+
 int	main(int argc, char **argv)
 {
 	try {
 		char	*input;
 		std::vector<int>	vect;
-//		std::vector<int>	main;
-//		std::vector<int>	pending;
+		std::vector<int>	main;
+		std::vector<int>	pending;
 		std::vector<int>::iterator	it;
 
 		int	last;
@@ -70,23 +87,24 @@ int	main(int argc, char **argv)
 		}
 		else
 			std::cout << "vect.size() vaut " << vect.size() << " c'est pair\n";
-/*
+
 		for (size_t i = 0; i != vect.size(); i += 2)
 		{
 			if (vect[i] < vect[i + 1]) 
-			{
 				std::swap(vect[i], vect[i + 1]);
-		//		pending.push_back(*it + 1);
-			}
 
 		}
-*/
+
 		std::cout << "\nVect vector\n";
 		for (it = vect.begin(); it != vect.end(); it++)
 			std::cout << *it << " ";
 //		std::cout << "\n\nPending vector\n";
 //		for (it = pending.begin(); it != pending.end(); it++)
 //			std::cout << *it << " ";
+		while (!sortPairs(vect));
+		std::cout << "\nAfter sorting pairs:\n";
+		for (it = vect.begin(); it != vect.end(); it++)
+			std::cout << *it << " ";
 	}
 	catch (std::exception &e)
 	{
