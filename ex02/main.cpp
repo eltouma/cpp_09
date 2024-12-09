@@ -6,7 +6,7 @@
 /*   By: ahayon <ahayon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 16:03:22 by eltouma           #+#    #+#             */
-/*   Updated: 2024/12/09 15:58:31 by ahayon           ###   ########.fr       */
+/*   Updated: 2024/12/09 16:00:21 by eltouma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,16 +94,30 @@ int	main(int argc, char **argv)
 				std::swap(vect[i], vect[i + 1]);
 
 		}
-
-		std::cout << "\nVect vector\n";
-		for (it = vect.begin(); it != vect.end(); it++)
-			std::cout << *it << " ";
-//		std::cout << "\n\nPending vector\n";
-//		for (it = pending.begin(); it != pending.end(); it++)
-//			std::cout << *it << " ";
-		while (!sortPairs(vect));
+    while (!sortPairs(vect));
 		std::cout << "\nAfter sorting pairs:\n";
 		for (it = vect.begin(); it != vect.end(); it++)
+			std::cout << *it << " ";
+		int	pendingVect;
+		int	mainVect;
+
+		std::cout << "\nVect vector\n";
+		for (size_t i = 0; i != vect.size(); i += 2)
+		{
+			mainVect = vect.at(i);
+			pendingVect = vect.at(i + 1);
+			pending.push_back(pendingVect);
+			main.push_back(mainVect);
+			
+		}
+		vect.clear();
+		main.insert(main.begin(), pending.front());
+		pending.erase(pending.begin());
+		std::cout << "\n\nmain vector\n";
+		for (it = main.begin(); it != main.end(); it++)
+			std::cout << *it << " ";
+		std::cout << "\n\nPending vector\n";
+		for (it = pending.begin(); it != pending.end(); it++)
 			std::cout << *it << " ";
 	}
 	catch (std::exception &e)
