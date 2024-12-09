@@ -6,7 +6,7 @@
 /*   By: eltouma <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 16:03:22 by eltouma           #+#    #+#             */
-/*   Updated: 2024/12/09 13:42:17 by eltouma          ###   ########.fr       */
+/*   Updated: 2024/12/09 15:15:03 by eltouma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,10 @@ int	main(int argc, char **argv)
 	try {
 		char	*input;
 		std::vector<int>	vect;
+//		std::vector<int>	main;
+//		std::vector<int>	pending;
+		std::vector<int>::iterator	it;
+
 		int	last;
 
 		if (argc != 2)
@@ -59,20 +63,30 @@ int	main(int argc, char **argv)
 		if (vect.size() & 1)
 		{
 			std::cout << "last = " << vect.back()<< "\n";
+			std::cout << "vect.size() vaut " << vect.size() << " c'est impair\n";
 			last = vect.back();
 			vect.pop_back();
-			std::cout << "vect.size() vaut " << vect.size() << " c'est impair\n";
 			std::cout << "now last = " << vect.back() << "\n";
 		}
 		else
 			std::cout << "vect.size() vaut " << vect.size() << " c'est pair\n";
-		for (size_t j = 0; j < vect.size(); j += 2)
+/*
+		for (size_t i = 0; i != vect.size(); i += 2)
 		{
-			if (vect[j] < vect[j + 1]) 
-				std::swap(vect[j], vect[j + 1]);
+			if (vect[i] < vect[i + 1]) 
+			{
+				std::swap(vect[i], vect[i + 1]);
+		//		pending.push_back(*it + 1);
+			}
+
 		}
-		for (size_t j = 0; j < vect.size(); j += 1)
-			std::cout << vect[j] << " ";
+*/
+		std::cout << "\nVect vector\n";
+		for (it = vect.begin(); it != vect.end(); it++)
+			std::cout << *it << " ";
+//		std::cout << "\n\nPending vector\n";
+//		for (it = pending.begin(); it != pending.end(); it++)
+//			std::cout << *it << " ";
 	}
 	catch (std::exception &e)
 	{
