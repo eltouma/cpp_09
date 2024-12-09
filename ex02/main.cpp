@@ -6,7 +6,7 @@
 /*   By: eltouma <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 16:03:22 by eltouma           #+#    #+#             */
-/*   Updated: 2024/12/09 15:15:03 by eltouma          ###   ########.fr       */
+/*   Updated: 2024/12/09 16:00:21 by eltouma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,8 @@ int	main(int argc, char **argv)
 	try {
 		char	*input;
 		std::vector<int>	vect;
-//		std::vector<int>	main;
-//		std::vector<int>	pending;
+		std::vector<int>	main;
+		std::vector<int>	pending;
 		std::vector<int>::iterator	it;
 
 		int	last;
@@ -81,12 +81,26 @@ int	main(int argc, char **argv)
 
 		}
 */
+		int	pendingVect;
+		int	mainVect;
 		std::cout << "\nVect vector\n";
-		for (it = vect.begin(); it != vect.end(); it++)
+		for (size_t i = 0; i != vect.size(); i += 2)
+		{
+			mainVect = vect.at(i);
+			pendingVect = vect.at(i + 1);
+			pending.push_back(pendingVect);
+			main.push_back(mainVect);
+			
+		}
+		vect.clear();
+		main.insert(main.begin(), pending.front());
+		pending.erase(pending.begin());
+		std::cout << "\n\nmain vector\n";
+		for (it = main.begin(); it != main.end(); it++)
 			std::cout << *it << " ";
-//		std::cout << "\n\nPending vector\n";
-//		for (it = pending.begin(); it != pending.end(); it++)
-//			std::cout << *it << " ";
+		std::cout << "\n\nPending vector\n";
+		for (it = pending.begin(); it != pending.end(); it++)
+			std::cout << *it << " ";
 	}
 	catch (std::exception &e)
 	{
