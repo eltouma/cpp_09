@@ -6,7 +6,7 @@
 /*   By: ahayon <ahayon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 16:03:22 by eltouma           #+#    #+#             */
-/*   Updated: 2024/12/09 16:00:21 by eltouma          ###   ########.fr       */
+/*   Updated: 2024/12/09 16:09:52 by eltouma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,8 +62,9 @@ int	main(int argc, char **argv)
 		std::vector<int>	main;
 		std::vector<int>	pending;
 		std::vector<int>::iterator	it;
-
 		int	last;
+		int	pendingVect;
+		int	mainVect;
 
 		if (argc != 2)
 			return (std::cerr << "Error\nWrong amount of arguments" << std::endl, 1);
@@ -94,13 +95,10 @@ int	main(int argc, char **argv)
 				std::swap(vect[i], vect[i + 1]);
 
 		}
-    while (!sortPairs(vect));
+		while (!sortPairs(vect));
 		std::cout << "\nAfter sorting pairs:\n";
 		for (it = vect.begin(); it != vect.end(); it++)
 			std::cout << *it << " ";
-		int	pendingVect;
-		int	mainVect;
-
 		std::cout << "\nVect vector\n";
 		for (size_t i = 0; i != vect.size(); i += 2)
 		{
@@ -108,7 +106,7 @@ int	main(int argc, char **argv)
 			pendingVect = vect.at(i + 1);
 			pending.push_back(pendingVect);
 			main.push_back(mainVect);
-			
+
 		}
 		vect.clear();
 		main.insert(main.begin(), pending.front());
@@ -119,6 +117,7 @@ int	main(int argc, char **argv)
 		std::cout << "\n\nPending vector\n";
 		for (it = pending.begin(); it != pending.end(); it++)
 			std::cout << *it << " ";
+		std::cout << std::endl;
 	}
 	catch (std::exception &e)
 	{
