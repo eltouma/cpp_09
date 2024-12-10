@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahayon <ahayon@student.42.fr>              +#+  +:+       +#+        */
+/*   By: skiam <skiam@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 16:03:22 by eltouma           #+#    #+#             */
-/*   Updated: 2024/12/09 21:01:34 by ahayon           ###   ########.fr       */
+/*   Updated: 2024/12/10 19:09:10 by skiam            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,19 +39,6 @@ int	checkInput(char *s, std::vector<int> &vect)
 
 void	sortPairs(std::vector<int> &vect)
 {
-	// for (unsigned long i = 0; i < vect.size(); i += 2)
-	// {
-	// 	for (unsigned long j = i + 2; j < vect.size(); j+= 2)
-	// 	{
-	// 		if (vect[i] > vect[j])
-	// 		{
-	// 			std::swap(vect[i], vect[j]);
-	// 			std::swap(vect[i + 1], vect[j + 1]);
-	// 			return (0);
-	// 		}
-	// 	}
-	// }
-	// return (1);
 	for (unsigned long i = 2; i < vect.size(); i *= 2)
 	{
 		unsigned long k = i;
@@ -73,6 +60,53 @@ void	sortPairs(std::vector<int> &vect)
 		for (std::vector<int>::iterator it = vect.begin(); it != vect.end(); it++)
 			std::cout << *it << " ";
 	}
+}
+std::vector<int> generateJacobsthal(int n) 
+{
+    std::vector<int> jacobsthal;
+
+    // Handle the base cases
+    if (n >= 1) jacobsthal.push_back(0); // J(0) = 0
+    if (n >= 2) jacobsthal.push_back(1); // J(1) = 1
+
+    // Generate the sequence up to J(n-1)
+    for (int i = 2; i < n; ++i) {
+        int next = jacobsthal[i - 1] + 2 * jacobsthal[i - 2];
+        jacobsthal.push_back(next);
+    }
+    return jacobsthal;
+}
+
+std::vector<int>	mergeInsert(std::vector<int> &vect)
+{
+		std::vector<int>	main;
+		std::vector<int>	pend;
+		std::vector<int>	jacob = generateJacobsthal(vect.size());
+
+		main = vect;
+		// Pas d'interet a diviser notre main en deux puisque deja triee, on commence alors a la division
+		//	en groupes suivante : / (2 * 2); 
+		int groups = main.size() / 4;
+		// Calcul de la taille des groupes qui pourront etre utilises dans l'algo
+		//	(les groupes trop petits pouvant etre restants seront gérés plus tard)
+		int groupSize = main.size() / groups;
+		
+		while (groupSize > 1)
+		{
+			// groupeSize * 3 pour aller a notre position b2 qui sera la premiere push dans pend
+			// puis on va de b2 en b3 etc en ajoutant notre groupsize * 2 (pour skip les a2, a3 etc)
+			for (int iteration = groupSize * 3; iteration < groups; iteration += (groupSize * 2))
+			{
+				pend.insert(pend.end(), main.begin() + iteration, main.begin() + (iteration + groupSize) + 1);
+				main.erase(main.begin() + iteration, main.begin() + (iteration + groupSize) + 1);
+			}
+			if (pend.size() > groupSize)
+			{
+				
+			}
+			groups *= 2;
+			groupSize /= 2;
+		}
 }
 
 int	main(int argc, char **argv)
