@@ -6,7 +6,7 @@
 /*   By: skiam <skiam@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 16:03:22 by eltouma           #+#    #+#             */
-/*   Updated: 2024/12/10 19:09:10 by skiam            ###   ########.fr       */
+/*   Updated: 2024/12/11 01:15:28 by skiam            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,17 +16,16 @@
 #include <limits.h>
 #include <cerrno>
 #include <vector>
+#include <cmath>
 
 
 int	checkInput(char *s, std::vector<int> &vect)
 {
 	std::string	str;
-	size_t	size;
 	long	nb;
 	char	*endptr;
 
 	str = s;
-	size = str.length();
 	errno = 0;
 	nb = strtol(str.c_str(), &endptr, 10);
 	if (endptr == str.c_str() || *endptr != '\0')
@@ -56,9 +55,9 @@ void	sortPairs(std::vector<int> &vect)
 			}
 			k += i;
 		}
-		std::cout << "\nIteration of sorting pairs:\n";
-		for (std::vector<int>::iterator it = vect.begin(); it != vect.end(); it++)
-			std::cout << *it << " ";
+		//std::cout << "\nIteration of sorting pairs:\n";
+		// for (std::vector<int>::iterator it = vect.begin(); it != vect.end(); it++)
+		// 	std::cout << *it << " ";
 	}
 }
 std::vector<int> generateJacobsthal(int n) 
@@ -77,36 +76,43 @@ std::vector<int> generateJacobsthal(int n)
     return jacobsthal;
 }
 
-std::vector<int>	mergeInsert(std::vector<int> &vect)
+std::vector<int>	mergeInsert(std::vector<int> &main)
 {
-		std::vector<int>	main;
-		std::vector<int>	pend;
-		std::vector<int>	jacob = generateJacobsthal(vect.size());
+		unsigned long		total_size = main.size();
+		std::vector<int>	pending;
+		std::vector<int>	jacob = generateJacobsthal(total_size / 2);
 
-		main = vect;
-		// Pas d'interet a diviser notre main en deux puisque deja triee, on commence alors a la division
-		//	en groupes suivante : / (2 * 2); 
-		int groups = main.size() / 4;
-		// Calcul de la taille des groupes qui pourront etre utilises dans l'algo
-		//	(les groupes trop petits pouvant etre restants seront gérés plus tard)
-		int groupSize = main.size() / groups;
-		
-		while (groupSize > 1)
+		int power = static_cast<int>(std::log(main.size()) / std::log(2));
+		power -= 2;
+		std::cout << "\n\nPower before loop = " << power << std::endl;
+		while (power >= 0)
 		{
-			// groupeSize * 3 pour aller a notre position b2 qui sera la premiere push dans pend
-			// puis on va de b2 en b3 etc en ajoutant notre groupsize * 2 (pour skip les a2, a3 etc)
-			for (int iteration = groupSize * 3; iteration < groups; iteration += (groupSize * 2))
+			unsigned long groupSize = std::pow(2, power);
+			std::cout << "\nGroup size = " << groupSize << std::endl;
+			//unsigned long groupsNb 	= total_size / groupSize;
+			
+			for (unsigned long iteration = groupSize * 2; iteration < main.size(); iteration += (groupSize * 2))
 			{
-				pend.insert(pend.end(), main.begin() + iteration, main.begin() + (iteration + groupSize) + 1);
-				main.erase(main.begin() + iteration, main.begin() + (iteration + groupSize) + 1);
+				if (iteration + groupSize <= main.size())
+				{
+					pending.insert(pending.end(), main.begin() + iteration, main.begin() + (iteration + groupSize));
+					main.erase(main.begin() + iteration, main.begin() + (iteration + groupSize));
+					iteration -= groupSize;
+				}
 			}
-			if (pend.size() > groupSize)
-			{
+			std::cout << "\n\nMain chain:\n";
+			for (std::vector<int>::iterator itM = main.begin(); itM != main.end(); itM++)
+		 		std::cout << *itM << " ";
+			std::cout << "\n\nPending chain:\n";
+			for (std::vector<int>::iterator itP = pending.begin(); itP != pending.end(); itP++)
+		 		std::cout << *itP << " ";
+			// if (pend.size() > groupSize)
+			// {
 				
-			}
-			groups *= 2;
-			groupSize /= 2;
+			// }
+			power--;
 		}
+		return main;
 }
 
 int	main(int argc, char **argv)
@@ -118,8 +124,8 @@ int	main(int argc, char **argv)
 		std::vector<int>	pending;
 		std::vector<int>::iterator	it;
 		int	last;
-		int	pendingVect;
-		int	mainVect;
+		// int	pendingVect;
+		// int	mainVect;
 
 		if (argc != 2)
 			return (std::cerr << "Error\nWrong amount of arguments" << std::endl, 1);
@@ -139,7 +145,7 @@ int	main(int argc, char **argv)
 			std::cout << "vect.size() vaut " << vect.size() << " c'est impair\n";
 			last = vect.back();
 			vect.pop_back();
-			std::cout << "now last = " << vect.back() << "\n";
+			std::cout << "now last = " << last << "\n";
 		}
 		else
 			std::cout << "vect.size() vaut " << vect.size() << " c'est pair\n";
@@ -151,27 +157,29 @@ int	main(int argc, char **argv)
 
 		// }
 		sortPairs(vect);
-		std::cout << "\nAfter sorting pairs:\n";
-		for (it = vect.begin(); it != vect.end(); it++)
-			std::cout << *it << " ";
-		std::cout << "\nVect vector\n";
-		for (size_t i = 0; i != vect.size(); i += 2)
-		{
-			mainVect = vect.at(i);
-			pendingVect = vect.at(i + 1);
-			pending.push_back(pendingVect);
-			main.push_back(mainVect);
-		}
-		vect.clear();
-		main.insert(main.begin(), pending.front());
-		pending.erase(pending.begin());
-		std::cout << "\n\nmain vector\n";
-		for (it = main.begin(); it != main.end(); it++)
-			std::cout << *it << " ";
-		std::cout << "\n\nPending vector\n";
-		for (it = pending.begin(); it != pending.end(); it++)
-			std::cout << *it << " ";
-		std::cout << std::endl;
+		mergeInsert(vect);
+		
+	// 	std::cout << "\nAfter sorting pairs:\n";
+	// 	for (it = vect.begin(); it != vect.end(); it++)
+	// 		std::cout << *it << " ";
+	// 	std::cout << "\nVect vector\n";
+	// 	for (size_t i = 0; i != vect.size(); i += 2)
+	// 	{
+	// 		mainVect = vect.at(i);
+	// 		pendingVect = vect.at(i + 1);
+	// 		pending.push_back(pendingVect);
+	// 		main.push_back(mainVect);
+	// 	}
+	// 	vect.clear();
+	// 	main.insert(main.begin(), pending.front());
+	// 	pending.erase(pending.begin());
+	// 	std::cout << "\n\nmain vector\n";
+	// 	for (it = main.begin(); it != main.end(); it++)
+	// 		std::cout << *it << " ";
+	// 	std::cout << "\n\nPending vector\n";
+	// 	for (it = pending.begin(); it != pending.end(); it++)
+	// 		std::cout << *it << " ";
+	// 	std::cout << std::endl;
 	}
 	catch (std::exception &e)
 	{
