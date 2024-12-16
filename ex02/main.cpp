@@ -6,7 +6,7 @@
 /*   By: ahayon <ahayon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 16:03:22 by eltouma           #+#    #+#             */
-/*   Updated: 2024/12/16 18:06:41 by ahayon           ###   ########.fr       */
+/*   Updated: 2024/12/16 18:21:55 by eltouma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -211,7 +211,8 @@ int	main(int argc, char **argv)
 
 		if (buff)
 			delete [] buff;
-
+		if (vect.size() == 1)
+			return (std::cerr << "Error\nWrong amount of arguments" << std::endl, 1);
 		// for (size_t i = 0; i != vect.size(); i += 2)
 		// {
 		// 	if (vect[i] < vect[i + 1]) 
