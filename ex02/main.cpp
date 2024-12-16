@@ -6,7 +6,7 @@
 /*   By: skiam <skiam@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 16:03:22 by eltouma           #+#    #+#             */
-/*   Updated: 2024/12/16 17:56:35 by eltouma          ###   ########.fr       */
+/*   Updated: 2024/12/16 18:04:29 by eltouma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,6 +124,7 @@ int	ft_strlen(char *str)
 	return (i);
 }
 
+// TO DO: si vect.size() == 1; return;
 int	main(int argc, char **argv)
 {
 //	try {
