@@ -18,7 +18,6 @@
 #include <vector>
 #include <cmath>
 
-
 int	checkInput(char *s, std::vector<int> &vect)
 {
 	std::string	str;
@@ -139,10 +138,24 @@ std::vector<int>	mergeInsert(std::vector<int> &main)
 		return main;
 }
 
+int	ft_strlen(char *str)
+{
+	int	i;
+
+	i = 0;
+	while (str[i] != '\0')
+		i += 1;
+	return (i);
+}
+
+// TO DO: si vect.size() == 1; return;
 int	main(int argc, char **argv)
 {
-	try {
+//	try {
 		char	*input;
+		std::string str;
+		char	*dup;
+		char	*buff;
 		std::vector<int>	vect;
 		std::vector<int>	main;
 		std::vector<int>	pending;
@@ -151,18 +164,40 @@ int	main(int argc, char **argv)
 		// int	pendingVect;
 		// int	mainVect;
 
-		if (argc != 2)
+		buff = NULL;
+		if (argc < 2)
 			return (std::cerr << "Error\nWrong amount of arguments" << std::endl, 1);
-		input = strtok(argv[1], " ");
+		// If argc > 2 => transforme tous les argc en string
+		if (argc > 2)
+		{
+			for (int i = 1; i < argc; i++)
+			{
+				str.reserve(ft_strlen(argv[i]));
+				str += argv[i];
+				str.reserve(1);
+				str += " ";
+			}
+			buff = new char[str.size() + 1];
+			dup = strcpy(buff, str.c_str());
+			input = strtok(buff, " ");
+		}
+		else
+			input = strtok(argv[1], " ");
 		size_t i = 0;
 		while (input != NULL)
 		{
+			std::cout << "input = " << input << std::endl;
 			if (checkInput(input, vect))
+			{
+				if (buff)
+					delete [] buff;
 				return (std::cerr << "Error" << std::endl, 1);
+			}
 			std::cout << "element: " << vect[i] << std::endl;
 			i += 1;
 			input = strtok(NULL, " ");
 		}
+
 		// if (vect.size() & 1)
 		// {
 		// 	std::cout << "last = " << vect.back() << "\n";
@@ -174,6 +209,9 @@ int	main(int argc, char **argv)
 		// else
 		std::cout << "vect.size() vaut " << vect.size() << std::endl;
 
+		if (buff)
+			delete [] buff;
+
 		// for (size_t i = 0; i != vect.size(); i += 2)
 		// {
 		// 	if (vect[i] < vect[i + 1]) 
@@ -181,11 +219,11 @@ int	main(int argc, char **argv)
 
 		// }
 		sortPairs(vect);
-		mergeInsert(vect);
 		
-	// 	std::cout << "\nAfter sorting pairs:\n";
-	// 	for (it = vect.begin(); it != vect.end(); it++)
-	// 		std::cout << *it << " ";
+	 	std::cout << "\nAfter sorting pairs:\n";
+	 	for (it = vect.begin(); it != vect.end(); it++)
+	 		std::cout << *it << " ";
+		mergeInsert(vect);
 	// 	std::cout << "\nVect vector\n";
 	// 	for (size_t i = 0; i != vect.size(); i += 2)
 	// 	{
@@ -203,11 +241,14 @@ int	main(int argc, char **argv)
 	// 	std::cout << "\n\nPending vector\n";
 	// 	for (it = pending.begin(); it != pending.end(); it++)
 	// 		std::cout << *it << " ";
+/*
 	// 	std::cout << std::endl;
 	}
 	catch (std::exception &e)
 	{
 		std::cerr << e.what() << std::endl;
 		return (1);
+
 	}
+*/
 }
