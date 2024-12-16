@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: skiam <skiam@student.42.fr>                +#+  +:+       +#+        */
+/*   By: ahayon <ahayon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 16:03:22 by eltouma           #+#    #+#             */
-/*   Updated: 2024/12/16 18:04:29 by eltouma          ###   ########.fr       */
+/*   Updated: 2024/12/16 18:06:41 by ahayon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,12 +75,17 @@ std::vector<int> generateJacobsthal(int n)
     return jacobsthal;
 }
 
+// std::vector<int>::iterator	findInsertIndex(std::vector<int> &main, std::vector<int> &rest, unsigned long goupSize grps)
+// {
+	
+// }
 std::vector<int>	mergeInsert(std::vector<int> &main)
 {
 		unsigned long		total_size = main.size();
 		std::vector<int>	pending;
 		std::vector<int>	jacob = generateJacobsthal(total_size / 2);
-
+		std::vector<int> 	rest;
+		
 		int power = static_cast<int>(std::log(main.size()) / std::log(2));
 		power -= 2;
 		std::cout << "\n\nPower before loop = " << power << std::endl;
@@ -88,12 +93,28 @@ std::vector<int>	mergeInsert(std::vector<int> &main)
 		{
 			unsigned long groupSize = std::pow(2, power);
 			std::cout << "\nGroup size = " << groupSize << std::endl;
-			//unsigned long groupsNb 	= total_size / groupSize;
+			unsigned long groupNb 	= total_size / groupSize;
+			bool	isOdd = groupNb % 2;
+			std::cout << "\nGroup nb = " << groupNb << "\t isOdd = " << isOdd << std::endl;
 			
+			if (isOdd == 1) {
+				rest.insert(rest.end(), main.begin() + groupSize * (groupNb - 1), main.end());
+				main.erase(main.begin() + groupSize * (groupNb - 1), main.end());
+			}
+			else {
+				if (groupNb * groupSize != total_size) {
+					rest.insert(rest.end(), main.begin() + groupSize * (groupNb), main.end());
+					main.erase(main.begin() + groupSize * (groupNb), main.end());
+				}
+			}
+			std::cout << "\n\nRest chain:\n";
+			for (std::vector<int>::iterator itR = rest.begin(); itR != rest.end(); itR++)
+		 		std::cout << *itR << " ";
 			for (unsigned long iteration = groupSize * 2; iteration < main.size(); iteration += (groupSize * 2))
 			{
 				if (iteration + groupSize <= main.size())
 				{
+					std::cout << "\nboucle iter" << std::endl;
 					pending.insert(pending.end(), main.begin() + iteration, main.begin() + (iteration + groupSize));
 					main.erase(main.begin() + iteration, main.begin() + (iteration + groupSize));
 					iteration -= groupSize;
@@ -107,6 +128,9 @@ std::vector<int>	mergeInsert(std::vector<int> &main)
 		 		std::cout << *itP << " ";
 			// if (pend.size() > groupSize)
 			// {
+				
+			// }
+			// if (isOdd) {
 				
 			// }
 			power--;
@@ -136,7 +160,7 @@ int	main(int argc, char **argv)
 		std::vector<int>	main;
 		std::vector<int>	pending;
 		std::vector<int>::iterator	it;
-		int	last;
+		//int	last;
 		// int	pendingVect;
 		// int	mainVect;
 
@@ -173,18 +197,20 @@ int	main(int argc, char **argv)
 			i += 1;
 			input = strtok(NULL, " ");
 		}
+
+		// if (vect.size() & 1)
+		// {
+		// 	std::cout << "last = " << vect.back() << "\n";
+		// 	std::cout << "vect.size() vaut " << vect.size() << " c'est impair\n";
+		// 	last = vect.back();
+		// 	vect.pop_back();
+		// 	std::cout << "now last = " << last << "\n";
+		// }
+		// else
+		std::cout << "vect.size() vaut " << vect.size() << std::endl;
+
 		if (buff)
 			delete [] buff;
-		if (vect.size() & 1)
-		{
-			std::cout << "last = " << vect.back() << "\n";
-			std::cout << "vect.size() vaut " << vect.size() << " c'est impair\n";
-			last = vect.back();
-			vect.pop_back();
-			std::cout << "now last = " << last << "\n";
-		}
-		else
-			std::cout << "vect.size() vaut " << vect.size() << " c'est pair\n";
 
 		// for (size_t i = 0; i != vect.size(); i += 2)
 		// {
