@@ -37,7 +37,8 @@ int	checkInput(char *s, std::vector<int> &vect)
 
 void	sortPairs(std::vector<int> &vect)
 {
-	for (unsigned long i = 2; i < vect.size(); i *= 2)
+	std::cout << __func__ << "\n";
+	for (unsigned long i = 2; i <= vect.size(); i *= 2)
 	{
 		unsigned long k = i;
 		for (unsigned long j = (i / 2); k <= vect.size(); j += i)
@@ -54,9 +55,9 @@ void	sortPairs(std::vector<int> &vect)
 			}
 			k += i;
 		}
-		//std::cout << "\nIteration of sorting pairs:\n";
-		// for (std::vector<int>::iterator it = vect.begin(); it != vect.end(); it++)
-		// 	std::cout << *it << " ";
+		std::cout << "\nIteration of sorting pairs:\n";
+		for (std::vector<int>::iterator it = vect.begin(); it != vect.end(); it++)
+			std::cout << *it << " ";
 	}
 }
 std::vector<int> generateJacobsthal(int n) 
@@ -86,15 +87,16 @@ std::vector<int>	mergeInsert(std::vector<int> &main)
 		std::vector<int>	jacob = generateJacobsthal(total_size / 2);
 		std::vector<int> 	rest;
 		
-		int power = static_cast<int>(std::log(main.size()) / std::log(2));
+		int power = static_cast<int>(log(main.size()) / log(2));
+		std::cout << "\n\nPower before loop -= 2: " << power << std::endl;
 		power -= 2;
 		std::cout << "\n\nPower before loop = " << power << std::endl;
 		while (power >= 0)
 		{
-			unsigned long groupSize = std::pow(2, power);
+			unsigned long groupSize = pow(2, power);
 			std::cout << "\nGroup size = " << groupSize << std::endl;
 			unsigned long groupNb 	= total_size / groupSize;
-			bool	isOdd = groupNb % 2;
+			bool	isOdd = groupNb & 1;
 			std::cout << "\nGroup nb = " << groupNb << "\t isOdd = " << isOdd << std::endl;
 			
 			if (isOdd == 1) {
@@ -103,6 +105,7 @@ std::vector<int>	mergeInsert(std::vector<int> &main)
 			}
 			else {
 				if (groupNb * groupSize != total_size) {
+					std::cout << "JE PASSE ICI\n";
 					rest.insert(rest.end(), main.begin() + groupSize * (groupNb), main.end());
 					main.erase(main.begin() + groupSize * (groupNb), main.end());
 				}
@@ -186,14 +189,14 @@ int	main(int argc, char **argv)
 		size_t i = 0;
 		while (input != NULL)
 		{
-			std::cout << "input = " << input << std::endl;
+		//	std::cout << "input = " << input << std::endl;
 			if (checkInput(input, vect))
 			{
 				if (buff)
 					delete [] buff;
-				return (std::cerr << "Error" << std::endl, 1);
+				return (std::cerr << "Error\nWrong input" << std::endl, 1);
 			}
-			std::cout << "element: " << vect[i] << std::endl;
+		//	std::cout << "element: " << vect[i] << std::endl;
 			i += 1;
 			input = strtok(NULL, " ");
 		}
@@ -207,7 +210,7 @@ int	main(int argc, char **argv)
 		// 	std::cout << "now last = " << last << "\n";
 		// }
 		// else
-		std::cout << "vect.size() vaut " << vect.size() << std::endl;
+	//	std::cout << "vect.size() vaut " << vect.size() << std::endl;
 
 		if (buff)
 			delete [] buff;
@@ -225,23 +228,23 @@ int	main(int argc, char **argv)
 	 	for (it = vect.begin(); it != vect.end(); it++)
 	 		std::cout << *it << " ";
 		mergeInsert(vect);
-	// 	std::cout << "\nVect vector\n";
-	// 	for (size_t i = 0; i != vect.size(); i += 2)
-	// 	{
-	// 		mainVect = vect.at(i);
-	// 		pendingVect = vect.at(i + 1);
-	// 		pending.push_back(pendingVect);
-	// 		main.push_back(mainVect);
-	// 	}
-	// 	vect.clear();
-	// 	main.insert(main.begin(), pending.front());
-	// 	pending.erase(pending.begin());
-	// 	std::cout << "\n\nmain vector\n";
-	// 	for (it = main.begin(); it != main.end(); it++)
-	// 		std::cout << *it << " ";
-	// 	std::cout << "\n\nPending vector\n";
-	// 	for (it = pending.begin(); it != pending.end(); it++)
-	// 		std::cout << *it << " ";
+		// std::cout << "\nVect vector\n";
+		// for (size_t i = 0; i != vect.size(); i += 2)
+		// {
+		// 	mainVect = vect.at(i);
+		// 	pendingVect = vect.at(i + 1);
+		// 	pending.push_back(pendingVect);
+		// 	main.push_back(mainVect);
+		// }
+		// vect.clear();
+		// main.insert(main.begin(), pending.front());
+		// pending.erase(pending.begin());
+		// std::cout << "\n\nmain vector\n";
+		// for (it = main.begin(); it != main.end(); it++)
+		// 	std::cout << *it << " ";
+		// std::cout << "\n\nPending vector\n";
+		// for (it = pending.begin(); it != pending.end(); it++)
+		// 	std::cout << *it << " ";
 /*
 	// 	std::cout << std::endl;
 	}
