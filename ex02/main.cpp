@@ -6,7 +6,7 @@
 /*   By: ahayon <ahayon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 16:03:22 by eltouma           #+#    #+#             */
-/*   Updated: 2024/12/17 23:33:44 by eltouma          ###   ########.fr       */
+/*   Updated: 2024/12/18 00:25:46 by eltouma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -236,6 +236,7 @@ int	binarySearch(std::vector<int> &main, int low, int high, std::vector<int> &pe
 
 }
    */
+void	printVect(std::vector<int> vect);
 
 void initPending(std::vector<int> &vect, int sizeElement, std::vector<std::pair<std::vector<int>, int> > &pending)
 {
@@ -243,25 +244,30 @@ void initPending(std::vector<int> &vect, int sizeElement, std::vector<std::pair<
 	int	nbElementsToPush;
 	std::vector<int>::iterator firstValGroup;
 	std::vector<int>::iterator lastValGroup;
-	std::pair<std::vector<int>, int> tmpPair;
 
-	std::cout << "vect.size() " << vect.size() << " sizeElement " << sizeElement << "\n";
+	std::cout << "\nvect.size() " << vect.size() << " sizeElement " << sizeElement << "\n";
 	nbElements = vect.size() / sizeElement;
 	nbElementsToPush = (nbElements / 2) - 1;
 	std::cout << "nbElements " << nbElements << ", nbElementsToPush " << nbElementsToPush << "\n";
 	if (nbElements & 1)
 		nbElementsToPush += 1;
 	firstValGroup = vect.begin() + sizeElement * 2;
+	std::cout << "firstValGroup " << *firstValGroup << "\n";
 	for (int i = 0; i < nbElementsToPush; i++)
 	{
+		std::pair<std::vector<int>, int> tmpPair;
 		lastValGroup = firstValGroup + sizeElement - 1;
-		tmpPair.first.insert(tmpPair.first.begin(), firstValGroup, lastValGroup);
+		std::cout << "lastValGroup " << *lastValGroup << "\n";
+		tmpPair.first.insert(tmpPair.first.begin(), firstValGroup, lastValGroup + 1);
 		if (vect.end() - 1 != lastValGroup)
 			tmpPair.second = *(lastValGroup + 1);
 		else
 			tmpPair.second = -1;
 		pending.push_back(tmpPair);
 		firstValGroup = vect.erase(firstValGroup, lastValGroup + 1);
+		std::cout << "\n\n";
+		printVect(vect);
+		std::cout << "\n\n";
 		firstValGroup += sizeElement;
 	}
 }
@@ -286,6 +292,27 @@ void	sortPairs(std::vector<int> &vect, int sizeElement)
 	}
 }
 
+void	printPending(std::vector<std::pair<std::vector<int>, int> > pending)
+{
+	for (size_t i = 0; i < pending.size(); i++)
+	{
+		for (size_t j = 0; j < pending[i].first.size(); j++)
+		{
+			std::cout << "first: " << pending[i].first.at(j) << " ";
+		}
+		std::cout << "second: " << pending[i].second << "\n";
+	}
+	
+}
+
+void	printVect(std::vector<int> vect)
+{
+	for (size_t i = 0; i < vect.size(); i++)
+		std::cout << "vect: " << vect[i] << " ";
+	std::cout << "\n";
+	
+}
+
 void	mergeInsert(std::vector<int> &vect, int sizeElement)
 {
 	std::vector<std::pair<std::vector<int>, int> > pending;
@@ -296,9 +323,10 @@ void	mergeInsert(std::vector<int> &vect, int sizeElement)
 	else
 		return ;
 	std::cout << "vect.size() " << vect.size() << " sizeElement " << sizeElement << "\n";
-	initPending(vect, sizeElement, pending);	
+	printVect(vect);
+	initPending(vect, sizeElement, pending);
+	printPending(pending);
 }
-
 
 int	main(int argc, char **argv)
 {
@@ -308,18 +336,16 @@ int	main(int argc, char **argv)
 	std::vector<int>	main;
 	std::vector<int>	pending;
 	std::vector<int>::iterator	it;
-	//int	last;
-	// int	pendingVect;
-	// int	mainVect;
 
 	input = NULL;
 	buff = NULL;
 	if (argc < 2)
 		return (std::cerr << "Error\nWrong amount of arguments" << std::endl, 1);
 	input = checkParam(argc, argv, input, buff);
+	std::cout << "input = ";
 	while (input != NULL)
 	{
-//		std::cout << "input = " << input << std::endl;
+		std::cout << input << " ";
 		if (checkInput(input, vect))
 		{
 			if (buff)
@@ -328,50 +354,13 @@ int	main(int argc, char **argv)
 		}
 		input = strtok(NULL, " ");
 	}
-
-	// if (vect.size() & 1)
-	// {
-	// 	std::cout << "last = " << vect.back() << "\n";
-	// 	std::cout << "vect.size() vaut " << vect.size() << " c'est impair\n";
-	// 	last = vect.back();
-	// 	vect.pop_back();
-	// 	std::cout << "now last = " << last << "\n";
-	// }
-	// else
-	//	std::cout << "vect.size() vaut " << vect.size() << std::endl;
-
+	std::cout << "\n";
 	if (vect.size() == 1)
 		return (std::cerr << "Error\nWrong amount of arguments" << std::endl, 1);
-	// for (size_t i = 0; i != vect.size(); i += 2)
-	// {
-	// 	if (vect[i] < vect[i + 1]) 
-	// 		std::swap(vect[i], vect[i + 1]);
-
-	// }
-//	sortPairs(vect);
-
 	mergeInsert(vect, 1);
 	std::cout << "\nAfter sorting pairs:\n";
 	for (it = vect.begin(); it != vect.end(); it++)
 		std::cout << *it << " ";
 	if (buff)
 		delete [] buff;
-
-	// std::cout << "\nVect vector\n";
-	// for (size_t i = 0; i != vect.size(); i += 2)
-	// {
-	// 	mainVect = vect.at(i);
-	// 	pendingVect = vect.at(i + 1);
-	// 	pending.push_back(pendingVect);
-	// 	main.push_back(mainVect);
-	// }
-	// vect.clear();
-	// main.insert(main.begin(), pending.front());
-	// pending.erase(pending.begin());
-	// std::cout << "\n\nmain vector\n";
-	// for (it = main.begin(); it != main.end(); it++)
-	// 	std::cout << *it << " ";
-	// std::cout << "\n\nPending vector\n";
-	// for (it = pending.begin(); it != pending.end(); it++)
-	// 	std::cout << *it << " ";
 }
