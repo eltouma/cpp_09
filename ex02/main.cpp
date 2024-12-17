@@ -6,7 +6,7 @@
 /*   By: ahayon <ahayon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 16:03:22 by eltouma           #+#    #+#             */
-/*   Updated: 2024/12/17 22:02:41 by eltouma          ###   ########.fr       */
+/*   Updated: 2024/12/17 23:33:44 by eltouma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -237,6 +237,35 @@ int	binarySearch(std::vector<int> &main, int low, int high, std::vector<int> &pe
 }
    */
 
+void initPending(std::vector<int> &vect, int sizeElement, std::vector<std::pair<std::vector<int>, int> > &pending)
+{
+	int	nbElements;
+	int	nbElementsToPush;
+	std::vector<int>::iterator firstValGroup;
+	std::vector<int>::iterator lastValGroup;
+	std::pair<std::vector<int>, int> tmpPair;
+
+	std::cout << "vect.size() " << vect.size() << " sizeElement " << sizeElement << "\n";
+	nbElements = vect.size() / sizeElement;
+	nbElementsToPush = (nbElements / 2) - 1;
+	std::cout << "nbElements " << nbElements << ", nbElementsToPush " << nbElementsToPush << "\n";
+	if (nbElements & 1)
+		nbElementsToPush += 1;
+	firstValGroup = vect.begin() + sizeElement * 2;
+	for (int i = 0; i < nbElementsToPush; i++)
+	{
+		lastValGroup = firstValGroup + sizeElement - 1;
+		tmpPair.first.insert(tmpPair.first.begin(), firstValGroup, lastValGroup);
+		if (vect.end() - 1 != lastValGroup)
+			tmpPair.second = *(lastValGroup + 1);
+		else
+			tmpPair.second = -1;
+		pending.push_back(tmpPair);
+		firstValGroup = vect.erase(firstValGroup, lastValGroup + 1);
+		firstValGroup += sizeElement;
+	}
+}
+
 void	sortPairs(std::vector<int> &vect, int sizeElement)
 {
 	int	pairNb;
@@ -259,9 +288,15 @@ void	sortPairs(std::vector<int> &vect, int sizeElement)
 
 void	mergeInsert(std::vector<int> &vect, int sizeElement)
 {
+	std::vector<std::pair<std::vector<int>, int> > pending;
+
 	sortPairs(vect, sizeElement);
 	if (vect.size() / sizeElement >= 2)
 		mergeInsert(vect, sizeElement * 2);
+	else
+		return ;
+	std::cout << "vect.size() " << vect.size() << " sizeElement " << sizeElement << "\n";
+	initPending(vect, sizeElement, pending);	
 }
 
 
