@@ -6,7 +6,7 @@
 /*   By: ahayon <ahayon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 16:03:22 by eltouma           #+#    #+#             */
-/*   Updated: 2024/12/16 18:21:55 by eltouma          ###   ########.fr       */
+/*   Updated: 2024/12/16 22:50:24 by ahayon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,29 @@ int	checkInput(char *s, std::vector<int> &vect)
 		return (1);
 	vect.push_back(nb);
 	return (0);
+}
+std::vector<int>::iterator	binarySearch(int value, std::vector<int> vect, unsigned long groupSize, unsigned long groupNb)
+{
+	std::vector<int>::iterator low = vect.begin() + (groupSize);
+	std::vector<int>::iterator high = vect.end();
+	while (low != high)
+	{
+		int mid = (*low + *high) / 2;
+		std::cout << "mid = " << mid << std::endl;
+		if (value >= mid)
+		{
+			low = vect.begin() + (groupSize * groupNb) / 2;
+			groupNb /= 2;
+			low++;
+		}
+		else
+		{
+			high = vect.begin() + (groupSize * groupNb) / 2;
+			groupNb /= 2;
+			high--;
+		}
+	}
+	return low;
 }
 
 void	sortPairs(std::vector<int> &vect)
@@ -129,10 +152,11 @@ std::vector<int>	mergeInsert(std::vector<int> &main)
 			std::cout << "\n\nPending chain:\n";
 			for (std::vector<int>::iterator itP = pending.begin(); itP != pending.end(); itP++)
 		 		std::cout << *itP << " ";
-			// if (pend.size() > groupSize)
-			// {
-				
-			// }
+			if (pending.size() > 0)
+			{
+				std::vector<int>::iterator	placetobe = binarySearch(*(pending.begin() + groupSize), main, groupSize, groupNb);
+				std::cout << "placetobe = " << *placetobe << std::endl;
+			}
 			// if (isOdd) {
 				
 			// }
