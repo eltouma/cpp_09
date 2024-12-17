@@ -6,7 +6,7 @@
 /*   By: ahayon <ahayon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 16:03:22 by eltouma           #+#    #+#             */
-/*   Updated: 2024/12/17 20:01:04 by eltouma          ###   ########.fr       */
+/*   Updated: 2024/12/17 22:02:41 by eltouma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,6 +85,7 @@ std::vector<int> generateJacobsthal(int n)
 
 // }
 
+/*
 int	binarySearch(std::vector<int> &main, int low, int high, std::vector<int> &pending)
 {
 	int	mid;
@@ -119,7 +120,7 @@ int	binarySearch(std::vector<int> &main, int low, int high, std::vector<int> &pe
 		}
 //	}
 }
-
+*/
 
 //std::vector<int>	mergeInsert(std::vector<int> &main)
 //{
@@ -238,32 +239,25 @@ int	binarySearch(std::vector<int> &main, int low, int high, std::vector<int> &pe
 
 void	sortPairs(std::vector<int> &vect, int sizeElement)
 {
+	int	pairNb;
+	int	firstElement;
+	int	lastElement;
 	
-	//if (vect.size() & 1)
-	for (unsigned long i = 2; i <= vect.size(); i *= 2)
+
+	pairNb = vect.size() / (sizeElement * 2);
+	firstElement = sizeElement - 1;
+	lastElement = sizeElement - 1 + sizeElement;
+	for (int i = 1; i <= pairNb; i++)
 	{
-		unsigned long k = i;
-		for (unsigned long j = (i / 2); k <= vect.size(); j += i)
-		{
-			if (vect[j - 1] > vect[k - 1])
-			{
-				std::cout << "boucle swap\n";
-				unsigned long l = 0;
-				while (l < (k - j))
-				{
-					std::swap(vect[j - l - 1], vect[k - l - 1]);
-					l++;
-				}
-			}
-			k += i;
-		}
-		std::cout << "\nIteration of sorting pairs:\n";
-		for (std::vector<int>::iterator it = vect.begin(); it != vect.end(); it++)
-			std::cout << *it << " ";
+		if (vect[firstElement] > vect[lastElement])
+			for (int j = 0; j < sizeElement; j++)
+				std::swap(vect[firstElement - j], vect[lastElement - j]);
+		firstElement += sizeElement * 2;
+		lastElement += sizeElement * 2;
 	}
 }
 
-void	mergeInsert(std::vector<int> vect, int sizeElement)
+void	mergeInsert(std::vector<int> &vect, int sizeElement)
 {
 	sortPairs(vect, sizeElement);
 	if (vect.size() / sizeElement >= 2)
@@ -290,7 +284,7 @@ int	main(int argc, char **argv)
 	input = checkParam(argc, argv, input, buff);
 	while (input != NULL)
 	{
-		std::cout << "input = " << input << std::endl;
+//		std::cout << "input = " << input << std::endl;
 		if (checkInput(input, vect))
 		{
 			if (buff)
