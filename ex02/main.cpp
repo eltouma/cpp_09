@@ -6,34 +6,13 @@
 /*   By: ahayon <ahayon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 16:03:22 by eltouma           #+#    #+#             */
-/*   Updated: 2024/12/16 22:50:24 by ahayon           ###   ########.fr       */
+/*   Updated: 2024/12/17 20:01:04 by eltouma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <iostream>
-#include <cstring>
-#include <cstdlib>
-#include <limits.h>
-#include <cerrno>
-#include <vector>
-#include <cmath>
+#include "PmergeMe.hpp"
 
-int	checkInput(char *s, std::vector<int> &vect)
-{
-	std::string	str;
-	long	nb;
-	char	*endptr;
-
-	str = s;
-	errno = 0;
-	nb = strtol(str.c_str(), &endptr, 10);
-	if (endptr == str.c_str() || *endptr != '\0')
-		return (1);
-	if (errno == ERANGE || nb < 0 || nb > INT_MAX)
-		return (1);
-	vect.push_back(nb);
-	return (0);
-}
+/*
 std::vector<int>::iterator	binarySearch(int value, std::vector<int> vect, unsigned long groupSize, unsigned long groupNb)
 {
 	std::vector<int>::iterator low = vect.begin() + (groupSize);
@@ -57,7 +36,8 @@ std::vector<int>::iterator	binarySearch(int value, std::vector<int> vect, unsign
 	}
 	return low;
 }
-
+*/
+/*
 void	sortPairs(std::vector<int> &vect)
 {
 	std::cout << __func__ << "\n";
@@ -83,7 +63,7 @@ void	sortPairs(std::vector<int> &vect)
 			std::cout << *it << " ";
 	}
 }
-
+*/
 std::vector<int> generateJacobsthal(int n) 
 {
 	std::vector<int> jacobsthal;
@@ -105,7 +85,6 @@ std::vector<int> generateJacobsthal(int n)
 
 // }
 
-/*
 int	binarySearch(std::vector<int> &main, int low, int high, std::vector<int> &pending)
 {
 	int	mid;
@@ -140,16 +119,18 @@ int	binarySearch(std::vector<int> &main, int low, int high, std::vector<int> &pe
 		}
 //	}
 }
-*/
 
-std::vector<int>	mergeInsert(std::vector<int> &main)
-{
+
+//std::vector<int>	mergeInsert(std::vector<int> &main)
+//{
+/*
 	unsigned long		total_size = main.size();
 	std::vector<int>	pending;
 	std::vector<int>	jacob = generateJacobsthal(total_size / 2);
 	std::vector<int> 	rest;
 
-	int power = static_cast<int>(log(main.size()) / log(2));
+	sortPairs(main);
+//	int power = static_cast<int>(log(main.size()) / log(2));
 	std::cout << "\n\nPower before loop -= 2: " << power << std::endl;
 	power -= 2;
 	std::cout << "\n\nPower before loop = " << power << std::endl;
@@ -231,7 +212,6 @@ std::vector<int>	mergeInsert(std::vector<int> &main)
 				std::cout << "groupSize size "<< groupSize<< "\n";
 				std::cout << "groupNb size "<< groupNb << "\n";
 			}
-/*
 			std::cout << "\n\nMain chain:\n";
 			for (std::vector<int>::iterator itM = main.begin(); itM != main.end(); itM++)
 		 		std::cout << *itM << " ";
@@ -247,28 +227,53 @@ std::vector<int>	mergeInsert(std::vector<int> &main)
 				
 			// }
 			power--;
-   */
+
 		}
 		power--;
 	}
 	return main;
-}
 
-int	ft_strlen(char *str)
+}
+   */
+
+void	sortPairs(std::vector<int> &vect, int sizeElement)
 {
-	int	i;
-
-	i = 0;
-	while (str[i] != '\0')
-		i += 1;
-	return (i);
+	
+	//if (vect.size() & 1)
+	for (unsigned long i = 2; i <= vect.size(); i *= 2)
+	{
+		unsigned long k = i;
+		for (unsigned long j = (i / 2); k <= vect.size(); j += i)
+		{
+			if (vect[j - 1] > vect[k - 1])
+			{
+				std::cout << "boucle swap\n";
+				unsigned long l = 0;
+				while (l < (k - j))
+				{
+					std::swap(vect[j - l - 1], vect[k - l - 1]);
+					l++;
+				}
+			}
+			k += i;
+		}
+		std::cout << "\nIteration of sorting pairs:\n";
+		for (std::vector<int>::iterator it = vect.begin(); it != vect.end(); it++)
+			std::cout << *it << " ";
+	}
 }
+
+void	mergeInsert(std::vector<int> vect, int sizeElement)
+{
+	sortPairs(vect, sizeElement);
+	if (vect.size() / sizeElement >= 2)
+		mergeInsert(vect, sizeElement * 2);
+}
+
 
 int	main(int argc, char **argv)
 {
 	char	*input;
-	std::string str;
-	char	*dup;
 	char	*buff;
 	std::vector<int>	vect;
 	std::vector<int>	main;
@@ -278,37 +283,20 @@ int	main(int argc, char **argv)
 	// int	pendingVect;
 	// int	mainVect;
 
+	input = NULL;
 	buff = NULL;
 	if (argc < 2)
 		return (std::cerr << "Error\nWrong amount of arguments" << std::endl, 1);
-	// If argc > 2 => transforme tous les argc en string
-	if (argc > 2)
-	{
-		for (int i = 1; i < argc; i++)
-		{
-			str.reserve(ft_strlen(argv[i]));
-			str += argv[i];
-			str.reserve(1);
-			str += " ";
-		}
-		buff = new char[str.size() + 1];
-		dup = strcpy(buff, str.c_str());
-		input = strtok(buff, " ");
-	}
-	else
-		input = strtok(argv[1], " ");
-	size_t i = 0;
+	input = checkParam(argc, argv, input, buff);
 	while (input != NULL)
 	{
-		//	std::cout << "input = " << input << std::endl;
+		std::cout << "input = " << input << std::endl;
 		if (checkInput(input, vect))
 		{
 			if (buff)
 				delete [] buff;
 			return (std::cerr << "Error\nWrong input" << std::endl, 1);
 		}
-		//	std::cout << "element: " << vect[i] << std::endl;
-		i += 1;
 		input = strtok(NULL, " ");
 	}
 
@@ -323,8 +311,6 @@ int	main(int argc, char **argv)
 	// else
 	//	std::cout << "vect.size() vaut " << vect.size() << std::endl;
 
-	if (buff)
-		delete [] buff;
 	if (vect.size() == 1)
 		return (std::cerr << "Error\nWrong amount of arguments" << std::endl, 1);
 	// for (size_t i = 0; i != vect.size(); i += 2)
@@ -333,12 +319,15 @@ int	main(int argc, char **argv)
 	// 		std::swap(vect[i], vect[i + 1]);
 
 	// }
-	sortPairs(vect);
+//	sortPairs(vect);
 
+	mergeInsert(vect, 1);
 	std::cout << "\nAfter sorting pairs:\n";
 	for (it = vect.begin(); it != vect.end(); it++)
 		std::cout << *it << " ";
-	mergeInsert(vect);
+	if (buff)
+		delete [] buff;
+
 	// std::cout << "\nVect vector\n";
 	// for (size_t i = 0; i != vect.size(); i += 2)
 	// {

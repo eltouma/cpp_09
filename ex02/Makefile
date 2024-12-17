@@ -6,7 +6,7 @@ MAKEFLAGS += --no-print-directory
 GREEN := \e[32m
 RESET :=\e[0m
 
-SRCS = PmergeMe.cpp main.cpp
+SRCS = checkParams.cpp main.cpp
 
 OBJS_PATH = objs/
 
