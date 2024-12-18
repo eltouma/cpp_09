@@ -6,7 +6,7 @@
 /*   By: ahayon <ahayon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 16:03:22 by eltouma           #+#    #+#             */
-/*   Updated: 2024/12/18 14:25:56 by eltouma          ###   ########.fr       */
+/*   Updated: 2024/12/18 15:44:21 by eltouma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -247,7 +247,7 @@ std::vector<int>::iterator	binarySearch(std::vector<int>::iterator start, std::v
 	{
 		if (it == start)
 		{
-			std::cout << "it " << *it << "== start " << *start << std::endl;
+			std::cout << "it: " << *it << " == start: " << *start << std::endl;
 			return (start - (sizeElement - 1));
 		}
 		return binarySearch(start, it - sizeElement, sizeElement, valToFind);
@@ -256,7 +256,7 @@ std::vector<int>::iterator	binarySearch(std::vector<int>::iterator start, std::v
 	{
 		if (it == end)
 		{
-			std::cout << "it " << *it << "== end " << *end << std::endl;
+			std::cout << "it: " << *it << " == end: " << *end << std::endl;
 			return (end + 1);
 		}
 		return binarySearch(it + sizeElement, end, sizeElement, valToFind);
