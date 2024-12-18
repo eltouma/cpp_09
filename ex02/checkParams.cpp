@@ -6,7 +6,7 @@
 /*   By: ahayon <ahayon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 16:03:22 by eltouma           #+#    #+#             */
-/*   Updated: 2024/12/17 17:10:41 by eltouma          ###   ########.fr       */
+/*   Updated: 2024/12/18 12:37:43 by eltouma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ int	ft_strlen(char *str)
 	return (i);
 }
 
-char    *checkParam(int argc, char **argv, char *input, char *&buff)
+char    *isString(int argc, char **argv, char *input, char *&buff)
 {
         std::string str;
         char    *dup;

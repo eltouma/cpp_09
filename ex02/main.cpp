@@ -6,7 +6,7 @@
 /*   By: ahayon <ahayon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 16:03:22 by eltouma           #+#    #+#             */
-/*   Updated: 2024/12/18 00:25:46 by eltouma          ###   ########.fr       */
+/*   Updated: 2024/12/18 14:25:56 by eltouma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,19 +80,15 @@ std::vector<int> generateJacobsthal(int n)
 	return jacobsthal;
 }
 
-// std::vector<int>::iterator	findInsertIndex(std::vector<int> &main, std::vector<int> &rest, unsigned long goupSize grps)
+//std::vector<int>::iterator	findInsertIndex(std::vector<int> &main, std::vector<int> &rest, unsigned long goupSize grps)
 // {
 
 // }
 
-/*
-int	binarySearch(std::vector<int> &main, int low, int high, std::vector<int> &pending)
-{
-	int	mid;
-	std::vector<int>::iterator it;
 
 //	if (pending.size())
 //	{
+/*
 		std::cout << "\n";
 		for (it = main.begin(); it != main.end() - groupSize; it++)
 			high = *it;
@@ -118,9 +114,9 @@ int	binarySearch(std::vector<int> &main, int low, int high, std::vector<int> &pe
 			std::cout << "groupSize size "<< groupSize<< "\n";
 			std::cout << "groupNb size "<< groupNb << "\n";
 		}
-//	}
-}
 */
+//	}
+//}
 
 //std::vector<int>	mergeInsert(std::vector<int> &main)
 //{
@@ -236,7 +232,36 @@ int	binarySearch(std::vector<int> &main, int low, int high, std::vector<int> &pe
 
 }
    */
-void	printVect(std::vector<int> vect);
+
+std::vector<int>::iterator	binarySearch(std::vector<int>::iterator start, std::vector<int>::iterator end, int sizeElement, int valToFind)
+{
+	std::cout << __func__ << "\n";
+	std::vector<int>::iterator	it;
+	size_t	mid;
+
+	mid  = std::distance(start, end) / sizeElement / 2;
+	it = start + mid * sizeElement;
+	std::cout << "mid " << mid << " *it " << *it << " start " << *start << " end " << *end << std::endl;
+
+	if (valToFind <	*it)
+	{
+		if (it == start)
+		{
+			std::cout << "it " << *it << "== start " << *start << std::endl;
+			return (start - (sizeElement - 1));
+		}
+		return binarySearch(start, it - sizeElement, sizeElement, valToFind);
+	}
+	else
+	{
+		if (it == end)
+		{
+			std::cout << "it " << *it << "== end " << *end << std::endl;
+			return (end + 1);
+		}
+		return binarySearch(it + sizeElement, end, sizeElement, valToFind);
+	}
+}
 
 void initPending(std::vector<int> &vect, int sizeElement, std::vector<std::pair<std::vector<int>, int> > &pending)
 {
@@ -252,6 +277,8 @@ void initPending(std::vector<int> &vect, int sizeElement, std::vector<std::pair<
 	if (nbElements & 1)
 		nbElementsToPush += 1;
 	firstValGroup = vect.begin() + sizeElement * 2;
+	if (!nbElementsToPush)
+		return ;
 	std::cout << "firstValGroup " << *firstValGroup << "\n";
 	for (int i = 0; i < nbElementsToPush; i++)
 	{
@@ -316,6 +343,8 @@ void	printVect(std::vector<int> vect)
 void	mergeInsert(std::vector<int> &vect, int sizeElement)
 {
 	std::vector<std::pair<std::vector<int>, int> > pending;
+	std::vector<int>::iterator end;
+	std::vector<int>::iterator insertIt;
 
 	sortPairs(vect, sizeElement);
 	if (vect.size() / sizeElement >= 2)
@@ -326,6 +355,17 @@ void	mergeInsert(std::vector<int> &vect, int sizeElement)
 	printVect(vect);
 	initPending(vect, sizeElement, pending);
 	printPending(pending);
+	while (pending.size())
+	{
+		end = find(vect.begin(), vect.end(), pending[0].second) - 1;
+	//	std::cout << "end " << *end << " ";
+		insertIt = binarySearch(vect.begin() + sizeElement - 1, end, sizeElement, pending[0].first.back());
+		std::cout << "insertIt " << *insertIt << " pending[0].first.begin() " << *pending[0].first.begin() << " pending[0].first.end() " << *(pending[0].first.end() - 1) << "\n";
+		vect.insert(insertIt, pending[0].first.begin(), pending[0].first.end());
+		pending.erase(pending.begin());
+		std::cout << "\t\tVect en fin de bouble\n\n";
+		printVect(vect);
+	}
 }
 
 int	main(int argc, char **argv)
@@ -341,7 +381,7 @@ int	main(int argc, char **argv)
 	buff = NULL;
 	if (argc < 2)
 		return (std::cerr << "Error\nWrong amount of arguments" << std::endl, 1);
-	input = checkParam(argc, argv, input, buff);
+	input = isString(argc, argv, input, buff);
 	std::cout << "input = ";
 	while (input != NULL)
 	{
