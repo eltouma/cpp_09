@@ -6,7 +6,7 @@
 /*   By: ahayon <ahayon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 16:03:22 by eltouma           #+#    #+#             */
-/*   Updated: 2024/12/20 01:33:07 by eltouma          ###   ########.fr       */
+/*   Updated: 2024/12/20 02:03:51 by eltouma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -379,19 +379,8 @@ void	mergeInsert(std::vector<int> &vect, int sizeElement)
 	initPending(vect, sizeElement, pending);
 	printPending(pending);
 	std::vector<int>::iterator jacIt = jacobOrder.begin();
-int jacIndex = *jacIt - 2;
 	while (vect.size() != total_size)
 	{
-if (jacIt == jacobOrder.end()) {
-    std::cerr << "jacIt est hors limites\n";
-    return;
-}
-
-		if (*jacIt < 2 ||  static_cast<size_t>(jacIndex) >= pending.size()) {
-		    std::cerr << "Indice jacIt invalide : " << *jacIt << "\n";
-   		 return;
-		}
-
 		std::cout << "\n\033[1;32mvect.size() \033[0m" << vect.size() << "\n";
 		std::cout << "\n\tdebut boucle insertion jacIt = " << *jacIt << " ett JacIt - 2 :" << *jacIt - 2 << " ok" << std::endl;
 		if (pending[*jacIt - 2].second) {
