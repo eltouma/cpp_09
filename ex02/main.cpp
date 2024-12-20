@@ -6,7 +6,7 @@
 /*   By: ahayon <ahayon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 16:03:22 by eltouma           #+#    #+#             */
-/*   Updated: 2024/12/18 15:44:21 by eltouma          ###   ########.fr       */
+/*   Updated: 2024/12/20 01:14:38 by eltouma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,21 +64,7 @@ void	sortPairs(std::vector<int> &vect)
 	}
 }
 */
-std::vector<int> generateJacobsthal(int n) 
-{
-	std::vector<int> jacobsthal;
 
-	// Handle the base cases
-	if (n >= 1) jacobsthal.push_back(0); // J(0) = 0
-	if (n >= 2) jacobsthal.push_back(1); // J(1) = 1
-
-	// Generate the sequence up to J(n-1)
-	for (int i = 2; i < n; ++i) {
-		int next = jacobsthal[i - 1] + 2 * jacobsthal[i - 2];
-		jacobsthal.push_back(next);
-	}
-	return jacobsthal;
-}
 
 //std::vector<int>::iterator	findInsertIndex(std::vector<int> &main, std::vector<int> &rest, unsigned long goupSize grps)
 // {
@@ -139,10 +125,7 @@ std::vector<int> generateJacobsthal(int n)
 		bool	isOdd = groupNb & 1;
 		std::cout << "\nGroup nb = " << groupNb << "\t isOdd = " << isOdd << std::endl;
 
-		if (isOdd == 1) {
-			rest.insert(rest.end(), main.begin() + groupSize * (groupNb - 1), main.end());
-			main.erase(main.begin() + groupSize * (groupNb - 1), main.end());
-		}
+		if (isOdd == 1) {int
 		else {
 			if (groupNb * groupSize != total_size) {
 				std::cout << "JE PASSE ICI\n";
@@ -166,9 +149,7 @@ std::vector<int> generateJacobsthal(int n)
 		std::cout << "\n\nMain chain:\n";
 		for (std::vector<int>::iterator itM = main.begin(); itM != main.end(); itM++)
 			std::cout << *itM << " ";
-		std::cout << "\n\nPending chain:\n";
-		for (std::vector<int>::iterator itP = pending.begin(); itP != pending.end(); itP++)
-			std::cout << *itP << " ";
+		std::cout << "\n\nPending chain:\n";int
 		// if (pend.size() > groupSize)
 		// {
 
@@ -194,7 +175,7 @@ std::vector<int> generateJacobsthal(int n)
 				mid = (low + high) / 2;
 				if (pending.back() == mid)
 				{
-					std::cout << "pending.back() == mid\n";
+					std::cout << "pending.back() == mid\n";int
 					break ;
 				}
 				if (pending.back() > mid)
@@ -216,7 +197,7 @@ std::vector<int> generateJacobsthal(int n)
 			for (std::vector<int>::iterator itP = pending.begin(); itP != pending.end(); itP++)
 		 		std::cout << *itP << " ";
 			if (pending.size() > 0)
-			{
+			{int
 				std::vector<int>::iterator	placetobe = binarySearch(*(pending.begin() + groupSize), main, groupSize, groupNb);
 				std::cout << "placetobe = " << *placetobe << std::endl;
 			}
@@ -232,6 +213,44 @@ std::vector<int> generateJacobsthal(int n)
 
 }
    */
+
+std::vector<int> generateJacobsthal(int maxValue) 
+{
+	std::vector<int> jacobsthal;
+
+	jacobsthal.push_back(0);
+	jacobsthal.push_back(1);
+    for (unsigned long i = 2; i < static_cast<unsigned long>(maxValue); ++i) 
+	{
+        int next = jacobsthal[i - 1] + 2 * jacobsthal[i - 2];
+        if (next > maxValue) break;
+        jacobsthal.push_back(next);
+	}
+	return jacobsthal;
+}
+
+std::vector<int> JacobOrder(unsigned long n)
+{
+	std::vector<int> jacob = generateJacobsthal(static_cast<int>(n));
+	std::vector<int> jacobOrder;
+		
+	//std::cout << "jacob.begin() " << *jacob.begin() << "\n";
+	for (std::vector<int>::iterator it = jacob.begin() + 3; it < jacob.end(); it++)
+	{
+		int prevValue = *(it - 1);
+		//std::cout << "prevValue " << prevValue << "\n";
+		for (int currValue = *it; currValue > prevValue; currValue--)
+		{
+			//std::cout << "dans le if prevValue " << prevValue << "\n";
+			//std::cout << "dans le if currValue " << currValue << "\n";
+			jacobOrder.push_back(currValue);
+		}
+	}
+	
+	for (std::vector<int>::iterator it = jacobOrder.begin(); it < jacobOrder.end(); it++)
+		std::cout << "jacob order : " << *it << std::endl;
+	return (jacobOrder);
+}
 
 std::vector<int>::iterator	binarySearch(std::vector<int>::iterator start, std::vector<int>::iterator end, int sizeElement, int valToFind)
 {
@@ -270,12 +289,12 @@ void initPending(std::vector<int> &vect, int sizeElement, std::vector<std::pair<
 	std::vector<int>::iterator firstValGroup;
 	std::vector<int>::iterator lastValGroup;
 
-	std::cout << "\nvect.size() " << vect.size() << " sizeElement " << sizeElement << "\n";
+	std::cout << "\n\033[1;36mvect.size() \033[0m" << vect.size() << " sizeElement " << sizeElement << "\n";
 	nbElements = vect.size() / sizeElement;
 	nbElementsToPush = (nbElements / 2) - 1;
-	std::cout << "nbElements " << nbElements << ", nbElementsToPush " << nbElementsToPush << "\n";
 	if (nbElements & 1)
 		nbElementsToPush += 1;
+	std::cout << "nbElements " << nbElements << ", nbElementsToPush " << nbElementsToPush << "\n";
 	firstValGroup = vect.begin() + sizeElement * 2;
 	if (!nbElementsToPush)
 		return ;
@@ -284,7 +303,8 @@ void initPending(std::vector<int> &vect, int sizeElement, std::vector<std::pair<
 	{
 		std::pair<std::vector<int>, int> tmpPair;
 		lastValGroup = firstValGroup + sizeElement - 1;
-		std::cout << "lastValGroup " << *lastValGroup << "\n";
+	printVect(vect);
+		std::cout << "lastValGroup " << *lastValGroup << " end " << *(vect.end() - 1) << "\n";
 		tmpPair.first.insert(tmpPair.first.begin(), firstValGroup, lastValGroup + 1);
 		if (vect.end() - 1 != lastValGroup)
 			tmpPair.second = *(lastValGroup + 1);
@@ -334,9 +354,10 @@ void	printPending(std::vector<std::pair<std::vector<int>, int> > pending)
 
 void	printVect(std::vector<int> vect)
 {
+	std::cout << "vect: " << std::endl;
 	for (size_t i = 0; i < vect.size(); i++)
-		std::cout << "vect: " << vect[i] << " ";
-	std::cout << "\n";
+		std::cout << vect[i] << " ";
+	std::cout << "\n\n";
 	
 }
 
@@ -352,20 +373,40 @@ void	mergeInsert(std::vector<int> &vect, int sizeElement)
 	else
 		return ;
 	std::cout << "vect.size() " << vect.size() << " sizeElement " << sizeElement << "\n";
+	std::vector<int> jacobOrder = JacobOrder(vect.size());
+	unsigned long total_size = vect.size();
 	printVect(vect);
 	initPending(vect, sizeElement, pending);
 	printPending(pending);
-	while (pending.size())
+	std::vector<int>::iterator jacIt = jacobOrder.begin();
+	while (vect.size() != total_size)
 	{
-		end = find(vect.begin(), vect.end(), pending[0].second) - 1;
-	//	std::cout << "end " << *end << " ";
-		insertIt = binarySearch(vect.begin() + sizeElement - 1, end, sizeElement, pending[0].first.back());
-		std::cout << "insertIt " << *insertIt << " pending[0].first.begin() " << *pending[0].first.begin() << " pending[0].first.end() " << *(pending[0].first.end() - 1) << "\n";
-		vect.insert(insertIt, pending[0].first.begin(), pending[0].first.end());
-		pending.erase(pending.begin());
-		std::cout << "\t\tVect en fin de bouble\n\n";
-		printVect(vect);
+		std::cout << "\n\033[1;32mvect.size() \033[0m" << vect.size() << "\n";
+		std::cout << "\n\tdebut boucle insertion jacIt = " << *jacIt << " ett JacIt - 2 :" << *jacIt - 2 << " ok" << std::endl;
+		if (pending[*jacIt - 2].second) {
+			
+			std::cout << "suite boucle insertion" << std::endl;
+			std::cout << "pending[*jacIt -2 ].second " << pending[*jacIt -2 ].second << " OK" << "\n";
+			end = find(vect.begin(), vect.end(), pending[*jacIt -2 ].second) - 1;
+			std::cout << "end " << *end << " ";
+			insertIt = binarySearch(vect.begin() + sizeElement - 1, end, sizeElement, pending[*jacIt - 2].first.back());
+			std::cout << "insertIt " << *insertIt << " pending[*jacIt - 2].first.begin() " << *pending[*jacIt - 2].first.begin() << " pending[*jacIt - 2].first.end() " << *(pending[*jacIt - 2].first.end() - 1) << "\n";
+			vect.insert(insertIt, pending[*jacIt - 2].first.begin(), pending[*jacIt - 2].first.end());
+			//pending.erase(pending.begin());
+			std::cout << "\t\tVect en fin de bouble\n\n";
+			printVect(vect);
+		}
+		if  (pending[*jacIt - 2].second == -1)
+			{
+				std::cout << "\033[1;31mboldon est -1\033[0m\n";
+					return ;
+			}
+		jacIt++;
+	//	}
 	}
+	std::cout << "PRINT VECT TEST\n";
+	printVect(vect);
+	pending.clear();
 }
 
 int	main(int argc, char **argv)
