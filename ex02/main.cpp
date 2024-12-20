@@ -6,11 +6,13 @@
 /*   By: ahayon <ahayon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 16:03:22 by eltouma           #+#    #+#             */
-/*   Updated: 2024/12/20 17:26:11 by eltouma          ###   ########.fr       */
+/*   Updated: 2024/12/20 18:42:21 by eltouma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "PmergeMe.hpp"
+
+void	printGroup(std::vector<int> vect, int sizeElement, int nbOfGroups);
 
 int	jacobNumber(int n)
 {
@@ -48,21 +50,23 @@ std::vector<int>::iterator	binarySearch(std::vector<int>::iterator start, std::v
 	}
 }
 
-void initPending(std::vector<int> &vect, int sizeElement, std::vector<std::pair<std::vector<int>, int> > &pending)
+void initPending(std::vector<int> &vect, int sizeElement, std::vector<std::pair<std::vector<int>, int> > &pending, int nbOfGroups)
 {
+	(void)nbOfGroups;
 	int	nbElements;
 	int	nbElementsToPush;
 	std::vector<int>::iterator firstValGroup;
 	std::vector<int>::iterator lastValGroup;
 
-	if (pending.size())
-		std::cout << "\n\033[1;36mvect.size() \033[0m" << vect.size() << " iiiiiiiiiiiiiiiiisizeElement " << sizeElement << "\n";
 	nbElements = vect.size() / sizeElement;
 	nbElementsToPush = (nbElements / 2) - 1;
 	if (nbElements & 1)
 		nbElementsToPush += 1;
 	if (pending.size())
+	{
+		std::cout << "\n\033[1;36mvect.size() \033[0m" << vect.size() << " sizeElement " << sizeElement << "\n";
 		std::cout << "nbElements " << nbElements << ", nbElementsToPush " << nbElementsToPush << "\n";
+	}
 	firstValGroup = vect.begin() + sizeElement * 2;
 	if (!nbElementsToPush)
 		return ;
@@ -71,7 +75,8 @@ void initPending(std::vector<int> &vect, int sizeElement, std::vector<std::pair<
 	{
 		std::pair<std::vector<int>, int> tmpPair;
 		lastValGroup = firstValGroup + sizeElement - 1;
-		printVect(vect);
+		std::cout << "ATTENTION TOUT LE MONDE JE FAIL\n";
+		printGroup(vect, sizeElement, nbOfGroups / 2);
 		std::cout << "lastValGroup " << *lastValGroup << " end " << *(vect.end() - 1) << "\n";
 		tmpPair.first.insert(tmpPair.first.begin(), firstValGroup, lastValGroup + 1);
 		if (vect.end() - 1 != lastValGroup)
@@ -81,7 +86,7 @@ void initPending(std::vector<int> &vect, int sizeElement, std::vector<std::pair<
 		pending.push_back(tmpPair);
 		firstValGroup = vect.erase(firstValGroup, lastValGroup + 1);
 		std::cout << "\n\n";
-		printVect(vect);
+		printGroup(vect, sizeElement, nbOfGroups / 2);
 		std::cout << "\n\n";
 		firstValGroup += sizeElement;
 	}
@@ -89,6 +94,7 @@ void initPending(std::vector<int> &vect, int sizeElement, std::vector<std::pair<
 
 void	printGroup(std::vector<int> vect, int sizeElement, int nbOfGroups)
 {
+	std::cout << "sizeElement: " <<sizeElement << " nbOfGroups: " << nbOfGroups << "\n";
 	for (int i = 0; i < nbOfGroups; i++) {
 		std::cout << "{";
 		for (int j = 0; j < sizeElement * 2; j++) {
@@ -172,20 +178,16 @@ void	mergeInsert(std::vector<int> &vect, int sizeElement)
 		return ;
 	std::cout << "------------------------------------------------------------------------------------------------\n\n";
 	std::cout << "\tvect.size() " << vect.size() << ", ";
-//	std::cout << "\t\tVect AVANT BOUCLE\n\n";
 	std::cout << nbOfGroups << " groups of " << sizeElement * 2 << " elements\n";
+	std::cout << "Print original vector\n";
 	printGroup(vect, sizeElement, nbOfGroups);
-//	printVect(vect);
-	initPending(vect, sizeElement, pending);
+	initPending(vect, sizeElement, pending, nbOfGroups);
 	std::cout << "Print pending\n";
 	printPending(pending);
 	int	prev_jacob = 1;
 	int	next_jacob = jacobNumber(jacobIn);
 	jacobIn++;
 	size_t	insertIndex;
-//	std::cout << "\t\tVect AVANT BOUCLE\n\n";
-//	printVect(vect);
-//	printGroup(vect, sizeElement, nbOfGroups);
 	while (pending.size())
 	{
 		if (next_jacob <= prev_jacob) 
@@ -203,7 +205,7 @@ void	mergeInsert(std::vector<int> &vect, int sizeElement)
 		if (pending[insertIndex].second == -1)
 		{
 			std::cout << "\033[1;31mend == -1; " << *end << " sizeElement = " << sizeElement << " \033[0m\n";
-			printVect(vect);
+//			printGroup(vect, sizeElement, nbOfGroups);
 		}
 		insertIt = binarySearch(vect.begin() + sizeElement - 1, end, sizeElement, pending[insertIndex].first.back());
 		std::cout << "insertIt " << *insertIt << " pending[insertIndex].first.begin() " << *pending[insertIndex].first.begin() << " pending[insertIndex].first.end() " << *(pending[insertIndex].first.end() - 1) << "\n";
@@ -211,13 +213,10 @@ void	mergeInsert(std::vector<int> &vect, int sizeElement)
 		pending.erase(pending.begin() + insertIndex);
 		next_jacob -= 1;
 		std::cout << "\t\tVect en fin de bouble\n\n";
-		printGroup(vect, sizeElement, nbOfGroups);
-	//	printVect(vect);
+//		printGroup(vect, sizeElement, nbOfGroups);
 	}
-std::cout << "PRINT VECT TEST\n";
-printGroup(vect, sizeElement, nbOfGroups);
-//printVect(vect);
-//pending.clear();
+	std::cout << "PRINT VECT TEST\n";
+	printGroup(vect, sizeElement, nbOfGroups);
 }
 
 int	main(int argc, char **argv)
