@@ -6,51 +6,11 @@
 /*   By: ahayon <ahayon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 16:03:22 by eltouma           #+#    #+#             */
-/*   Updated: 2024/12/20 16:52:48 by eltouma          ###   ########.fr       */
+/*   Updated: 2024/12/20 17:26:11 by eltouma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "PmergeMe.hpp"
-
-/*
-   std::vector<int> generateJacobsthal(int maxValue) 
-   {
-   std::vector<int> jacobsthal;
-
-   jacobsthal.push_back(0);
-   jacobsthal.push_back(1);
-   for (unsigned long i = 2; i < static_cast<unsigned long>(maxValue); ++i) 
-   {
-   int next = jacobsthal[i - 1] + 2 * jacobsthal[i - 2];
-   if (next > maxValue) break;
-   jacobsthal.push_back(next);
-   }
-   return jacobsthal;
-   }
-
-   std::vector<int> JacobOrder(unsigned long n)
-   {
-   std::vector<int> jacob = generateJacobsthal(static_cast<int>(n));
-   std::vector<int> jacobOrder;
-
-//std::cout << "jacob.begin() " << *jacob.begin() << "\n";
-for (std::vector<int>::iterator it = jacob.begin() + 3; it < jacob.end(); it++)
-{
-int prevValue = *(it - 1);
-//std::cout << "prevValue " << prevValue << "\n";
-for (int currValue = *it; currValue > prevValue; currValue--)
-{
-//std::cout << "dans le if prevValue " << prevValue << "\n";
-//std::cout << "dans le if currValue " << currValue << "\n";
-jacobOrder.push_back(currValue);
-}
-}
-for (std::vector<int>::iterator it = jacobOrder.begin(); it < jacobOrder.end(); it++)
-std::cout << "jacob order : " << *it << std::endl;
-
-return (jacobOrder);
-}
- */
 
 int	jacobNumber(int n)
 {
@@ -95,12 +55,14 @@ void initPending(std::vector<int> &vect, int sizeElement, std::vector<std::pair<
 	std::vector<int>::iterator firstValGroup;
 	std::vector<int>::iterator lastValGroup;
 
-	std::cout << "\n\033[1;36mvect.size() \033[0m" << vect.size() << " sizeElement " << sizeElement << "\n";
+	if (pending.size())
+		std::cout << "\n\033[1;36mvect.size() \033[0m" << vect.size() << " iiiiiiiiiiiiiiiiisizeElement " << sizeElement << "\n";
 	nbElements = vect.size() / sizeElement;
 	nbElementsToPush = (nbElements / 2) - 1;
 	if (nbElements & 1)
 		nbElementsToPush += 1;
-	std::cout << "nbElements " << nbElements << ", nbElementsToPush " << nbElementsToPush << "\n";
+	if (pending.size())
+		std::cout << "nbElements " << nbElements << ", nbElementsToPush " << nbElementsToPush << "\n";
 	firstValGroup = vect.begin() + sizeElement * 2;
 	if (!nbElementsToPush)
 		return ;
@@ -127,11 +89,9 @@ void initPending(std::vector<int> &vect, int sizeElement, std::vector<std::pair<
 
 void	printGroup(std::vector<int> vect, int sizeElement, int nbOfGroups)
 {
-	if (!nbOfGroups)
-		return ;
-	for (int i = 0; i < nbOfGroups; ++i) {
+	for (int i = 0; i < nbOfGroups; i++) {
 		std::cout << "{";
-		for (int j = 0; j < sizeElement * 2; ++j) {
+		for (int j = 0; j < sizeElement * 2; j++) {
 			std::cout << vect[i * sizeElement * 2 + j];
 			if (j < sizeElement * 2 - 1)
 				std::cout << ", ";
@@ -150,12 +110,14 @@ void	sortPairs(std::vector<int> &vect, int sizeElement)
 
 
 	nbOfGroups = vect.size() / (sizeElement * 2);
-	std::cout << "Number of groups " << nbOfGroups << std::endl;
 	firstElement = sizeElement - 1;
 	lastElement = sizeElement - 1 + sizeElement;
-	//std::cout << "Element size: " << sizeElement << ". Amount of nbs in a group: " << sizeElement * 2 << std::endl;
-	std::cout << "Original pairs" << std::endl;
-	printGroup(vect, sizeElement, nbOfGroups);
+	if (nbOfGroups)
+	{
+		std::cout << "Number of groups " << nbOfGroups << std::endl;
+		std::cout << "Original pairs" << std::endl;
+		printGroup(vect, sizeElement, nbOfGroups);
+	}
 	for (int i = 1; i <= nbOfGroups; i++)
 	{
 		if (vect[firstElement] > vect[lastElement])
@@ -164,8 +126,11 @@ void	sortPairs(std::vector<int> &vect, int sizeElement)
 		firstElement += sizeElement * 2;
 		lastElement += sizeElement * 2;
 	}
-	std::cout << "Sorted pairs" << std::endl;
-	printGroup(vect, sizeElement, nbOfGroups);
+	if (nbOfGroups)
+	{
+		std::cout << "Sorted pairs" << std::endl;
+		printGroup(vect, sizeElement, nbOfGroups);
+	}
 	std::cout << std::endl;
 }
 
@@ -194,6 +159,7 @@ void	printVect(std::vector<int> vect)
 
 void	mergeInsert(std::vector<int> &vect, int sizeElement)
 {
+	int nbOfGroups = vect.size() / (sizeElement * 2);
 	int	jacobIn = 0;
 	std::vector<std::pair<std::vector<int>, int> > pending;
 	std::vector<int>::iterator end;
@@ -204,19 +170,22 @@ void	mergeInsert(std::vector<int> &vect, int sizeElement)
 		mergeInsert(vect, sizeElement * 2);
 	else
 		return ;
-	std::cout << "vect.size() " << vect.size() << ", ";
-	std::cout << vect.size() / sizeElement << " groups of " << sizeElement << " elements\n";
-	//	std::vector<int> jacobOrder = JacobOrder(vect.size());
-	//	unsigned long total_size = vect.size();
-	printVect(vect);
+	std::cout << "------------------------------------------------------------------------------------------------\n\n";
+	std::cout << "\tvect.size() " << vect.size() << ", ";
+//	std::cout << "\t\tVect AVANT BOUCLE\n\n";
+	std::cout << nbOfGroups << " groups of " << sizeElement * 2 << " elements\n";
+	printGroup(vect, sizeElement, nbOfGroups);
+//	printVect(vect);
 	initPending(vect, sizeElement, pending);
+	std::cout << "Print pending\n";
 	printPending(pending);
 	int	prev_jacob = 1;
 	int	next_jacob = jacobNumber(jacobIn);
 	jacobIn++;
 	size_t	insertIndex;
-	std::cout << "\t\tVect AVANT bouble\n\n";
-	printVect(vect);
+//	std::cout << "\t\tVect AVANT BOUCLE\n\n";
+//	printVect(vect);
+//	printGroup(vect, sizeElement, nbOfGroups);
 	while (pending.size())
 	{
 		if (next_jacob <= prev_jacob) 
@@ -242,45 +211,13 @@ void	mergeInsert(std::vector<int> &vect, int sizeElement)
 		pending.erase(pending.begin() + insertIndex);
 		next_jacob -= 1;
 		std::cout << "\t\tVect en fin de bouble\n\n";
-		printVect(vect);
+		printGroup(vect, sizeElement, nbOfGroups);
+	//	printVect(vect);
 	}
-	/*
-	   std::vector<int>::iterator jacIt = jacobOrder.begin();
-
-	   while (vect.size() != total_size)
-	   {
-	   std::cout << "\nect.size() \033[0m" << vect.size() << "\n";
-	   std::cout << "\n\tdebut boucle insertion jacIt = " << *jacIt << " ett JacIt - 2 :" << *jacIt - 2 << " ok" << std::endl;
-	   if (pending[*jacIt - 2].second) {
-
-	   std::cout << "suite boucle insertion" << std::endl;
-	   std::cout << "pending[*jacIt -2 ].second " << pending[*jacIt -2 ].second << " OK" << "\n";
-	   end = find(vect.begin(), vect.end(), pending[*jacIt -2 ].second) - 1;
-	   if (end == vect.end())
-	   return ;
-	   std::cout << "end " << *end << " ";
-	   insertIt = binarySearch(vect.begin() + sizeElement - 1, end, sizeElement, pending[*jacIt - 2].first.back());
-	   std::cout << "insertIt " << *insertIt << " pending[*jacIt - 2].first.begin() " << *pending[*jacIt - 2].first.begin() << " pending[*jacIt - 2].first.end() " << *(pending[*jacIt - 2].first.end() - 1) << "\n";
-	   vect.insert(insertIt, pending[*jacIt - 2].first.begin(), pending[*jacIt - 2].first.end());
-	//			pending.erase(pending.begin());
-	std::cout << "\t\tVect en fin de bouble\n\n";
-	printVect(vect);
-	}
-	std::cout << "*jacIt: " << *jacIt << "\n";
-	if  (pending[*jacIt - 2].second == -1)
-	{
-	std::cout << "\033[1;31mon est -1\033[0m\n";
-	jacIt -= 2;
-	std::cout << "*jacIt: " << *jacIt << "\n";
-	//		return ;
-	}
-	jacIt++;
-	//	}
-	}
-	 */
 std::cout << "PRINT VECT TEST\n";
-printVect(vect);
-pending.clear();
+printGroup(vect, sizeElement, nbOfGroups);
+//printVect(vect);
+//pending.clear();
 }
 
 int	main(int argc, char **argv)
@@ -309,11 +246,11 @@ int	main(int argc, char **argv)
 		}
 		input = strtok(NULL, " ");
 	}
-	std::cout << "\n";
+	std::cout << "\n\n";
 	if (vect.size() == 1)
 		return (std::cerr << "Error\nWrong amount of arguments" << std::endl, 1);
 	mergeInsert(vect, 1);
-	std::cout << "\nAfter sorting pairs:\n";
+	std::cout << "\nSorted list:\n";
 	for (it = vect.begin(); it != vect.end(); it++)
 		std::cout << *it << " ";
 	if (buff)
