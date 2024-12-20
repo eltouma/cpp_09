@@ -6,7 +6,7 @@
 /*   By: ahayon <ahayon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 16:03:22 by eltouma           #+#    #+#             */
-/*   Updated: 2024/12/20 16:51:09 by eltouma          ###   ########.fr       */
+/*   Updated: 2024/12/20 16:52:48 by eltouma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,13 +158,9 @@ void	sortPairs(std::vector<int> &vect, int sizeElement)
 	printGroup(vect, sizeElement, nbOfGroups);
 	for (int i = 1; i <= nbOfGroups; i++)
 	{
-		//		printGroup(vect, sizeElement);
 		if (vect[firstElement] > vect[lastElement])
 			for (int j = 0; j < sizeElement; j++)
-			{
-				//				printGroup(vect, sizeElement);
 				std::swap(vect[firstElement - j], vect[lastElement - j]);
-			}
 		firstElement += sizeElement * 2;
 		lastElement += sizeElement * 2;
 	}
