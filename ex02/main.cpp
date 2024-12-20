@@ -6,7 +6,7 @@
 /*   By: ahayon <ahayon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 16:03:22 by eltouma           #+#    #+#             */
-/*   Updated: 2024/12/20 01:14:38 by eltouma          ###   ########.fr       */
+/*   Updated: 2024/12/20 01:33:07 by eltouma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -379,8 +379,19 @@ void	mergeInsert(std::vector<int> &vect, int sizeElement)
 	initPending(vect, sizeElement, pending);
 	printPending(pending);
 	std::vector<int>::iterator jacIt = jacobOrder.begin();
+int jacIndex = *jacIt - 2;
 	while (vect.size() != total_size)
 	{
+if (jacIt == jacobOrder.end()) {
+    std::cerr << "jacIt est hors limites\n";
+    return;
+}
+
+		if (*jacIt < 2 ||  static_cast<size_t>(jacIndex) >= pending.size()) {
+		    std::cerr << "Indice jacIt invalide : " << *jacIt << "\n";
+   		 return;
+		}
+
 		std::cout << "\n\033[1;32mvect.size() \033[0m" << vect.size() << "\n";
 		std::cout << "\n\tdebut boucle insertion jacIt = " << *jacIt << " ett JacIt - 2 :" << *jacIt - 2 << " ok" << std::endl;
 		if (pending[*jacIt - 2].second) {
@@ -388,6 +399,8 @@ void	mergeInsert(std::vector<int> &vect, int sizeElement)
 			std::cout << "suite boucle insertion" << std::endl;
 			std::cout << "pending[*jacIt -2 ].second " << pending[*jacIt -2 ].second << " OK" << "\n";
 			end = find(vect.begin(), vect.end(), pending[*jacIt -2 ].second) - 1;
+			if (end == vect.end())
+				return ;
 			std::cout << "end " << *end << " ";
 			insertIt = binarySearch(vect.begin() + sizeElement - 1, end, sizeElement, pending[*jacIt - 2].first.back());
 			std::cout << "insertIt " << *insertIt << " pending[*jacIt - 2].first.begin() " << *pending[*jacIt - 2].first.begin() << " pending[*jacIt - 2].first.end() " << *(pending[*jacIt - 2].first.end() - 1) << "\n";
@@ -397,10 +410,16 @@ void	mergeInsert(std::vector<int> &vect, int sizeElement)
 			printVect(vect);
 		}
 		if  (pending[*jacIt - 2].second == -1)
-			{
-				std::cout << "\033[1;31mboldon est -1\033[0m\n";
-					return ;
-			}
+		{
+			std::cout << "\033[1;31mboldon est -1\033[0m\n";
+			std::cout << "\t\tVect dans le if\n\n";
+			printVect(vect);
+			end = find(vect.begin(), vect.end(), pending[0].second) - 1;
+			insertIt = binarySearch(vect.begin() + sizeElement - 1, end, sizeElement, pending[0].first.back());
+vect.insert(insertIt, pending[0].first.begin(), pending[0].first.end());
+
+				return ;
+		}
 		jacIt++;
 	//	}
 	}
