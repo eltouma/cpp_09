@@ -6,13 +6,14 @@
 /*   By: ahayon <ahayon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 16:03:22 by eltouma           #+#    #+#             */
-/*   Updated: 2024/12/20 18:42:21 by eltouma          ###   ########.fr       */
+/*   Updated: 2024/12/21 00:57:48 by eltouma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "PmergeMe.hpp"
 
 void	printGroup(std::vector<int> vect, int sizeElement, int nbOfGroups);
+void	printPending(std::vector<std::pair<std::vector<int>, int> > pending);
 
 int	jacobNumber(int n)
 {
@@ -62,15 +63,14 @@ void initPending(std::vector<int> &vect, int sizeElement, std::vector<std::pair<
 	nbElementsToPush = (nbElements / 2) - 1;
 	if (nbElements & 1)
 		nbElementsToPush += 1;
-	if (pending.size())
-	{
-		std::cout << "\n\033[1;36mvect.size() \033[0m" << vect.size() << " sizeElement " << sizeElement << "\n";
-		std::cout << "nbElements " << nbElements << ", nbElementsToPush " << nbElementsToPush << "\n";
-	}
+	std::cout << "\t" << __func__ << "\n";
+	std::cout << "\n\033[1;36mVVVVVVvect.size() \033[0m" << vect.size() << " sizeElement " << sizeElement << "\n";
+	std::cout << "nbElements " << nbElements << ", nbElementsToPush " << nbElementsToPush << "\n";
 	firstValGroup = vect.begin() + sizeElement * 2;
 	if (!nbElementsToPush)
 		return ;
 	std::cout << "firstValGroup " << *firstValGroup << "\n";
+	//printPending(pending);
 	for (int i = 0; i < nbElementsToPush; i++)
 	{
 		std::pair<std::vector<int>, int> tmpPair;
@@ -90,11 +90,13 @@ void initPending(std::vector<int> &vect, int sizeElement, std::vector<std::pair<
 		std::cout << "\n\n";
 		firstValGroup += sizeElement;
 	}
+	std::cout << "LE PENDING MESSIEURS DAMES" << "\n";
+	printPending(pending);
 }
 
 void	printGroup(std::vector<int> vect, int sizeElement, int nbOfGroups)
 {
-	std::cout << "sizeElement: " <<sizeElement << " nbOfGroups: " << nbOfGroups << "\n";
+	std::cout << "sizeElement: " << sizeElement << " nbOfGroups: " << nbOfGroups << "\n";
 	for (int i = 0; i < nbOfGroups; i++) {
 		std::cout << "{";
 		for (int j = 0; j < sizeElement * 2; j++) {
@@ -128,7 +130,11 @@ void	sortPairs(std::vector<int> &vect, int sizeElement)
 	{
 		if (vect[firstElement] > vect[lastElement])
 			for (int j = 0; j < sizeElement; j++)
+			{
 				std::swap(vect[firstElement - j], vect[lastElement - j]);
+//				std::cout << "\n";
+//				std::cout << vect[firstElement -j] << ", " << vect[lastElement -j];
+			}
 		firstElement += sizeElement * 2;
 		lastElement += sizeElement * 2;
 	}
@@ -144,12 +150,14 @@ void	printPending(std::vector<std::pair<std::vector<int>, int> > pending)
 {
 	for (size_t i = 0; i < pending.size(); i++)
 	{
-		std::cout << "first:\033[33m";
+		std::cout << "{\033[33m";
 		for (size_t j = 0; j < pending[i].first.size(); j++)
 		{
 			std::cout << " " << pending[i].first.at(j);
 		}
-		std::cout << " \033[0msecond: " << pending[i].second << "\n";
+//		std::cout << "}";
+		std::cout << " \033[0m}";
+	//	std::cout << " \033[0msecond: " << pending[i].second << "\n";
 	}
 
 }
@@ -172,14 +180,16 @@ void	mergeInsert(std::vector<int> &vect, int sizeElement)
 	std::vector<int>::iterator insertIt;
 
 	sortPairs(vect, sizeElement);
-	if (vect.size() / sizeElement >= 2)
+	if (vect.size() / sizeElement > 2)
 		mergeInsert(vect, sizeElement * 2);
 	else
 		return ;
 	std::cout << "------------------------------------------------------------------------------------------------\n\n";
+	if (!pending.size())
+		std::cout << "No pend - no insertions. Move on" << std::endl;
 	std::cout << "\tvect.size() " << vect.size() << ", ";
 	std::cout << nbOfGroups << " groups of " << sizeElement * 2 << " elements\n";
-	std::cout << "Print original vector\n";
+	std::cout << "iiiiiiiiiiiiiPrint original vector\n";
 	printGroup(vect, sizeElement, nbOfGroups);
 	initPending(vect, sizeElement, pending, nbOfGroups);
 	std::cout << "Print pending\n";
@@ -205,7 +215,7 @@ void	mergeInsert(std::vector<int> &vect, int sizeElement)
 		if (pending[insertIndex].second == -1)
 		{
 			std::cout << "\033[1;31mend == -1; " << *end << " sizeElement = " << sizeElement << " \033[0m\n";
-//			printGroup(vect, sizeElement, nbOfGroups);
+			//			printGroup(vect, sizeElement, nbOfGroups);
 		}
 		insertIt = binarySearch(vect.begin() + sizeElement - 1, end, sizeElement, pending[insertIndex].first.back());
 		std::cout << "insertIt " << *insertIt << " pending[insertIndex].first.begin() " << *pending[insertIndex].first.begin() << " pending[insertIndex].first.end() " << *(pending[insertIndex].first.end() - 1) << "\n";
@@ -213,10 +223,25 @@ void	mergeInsert(std::vector<int> &vect, int sizeElement)
 		pending.erase(pending.begin() + insertIndex);
 		next_jacob -= 1;
 		std::cout << "\t\tVect en fin de bouble\n\n";
-//		printGroup(vect, sizeElement, nbOfGroups);
+		//		printGroup(vect, sizeElement, nbOfGroups);
 	}
 	std::cout << "PRINT VECT TEST\n";
 	printGroup(vect, sizeElement, nbOfGroups);
+}
+
+int	handleDuplicate(std::vector<int> vect, std::vector<int>::iterator it, char *buff)
+{
+	std::vector<int>	tmp;
+	tmp.insert(tmp.begin(), vect.begin(), vect.end());
+	sort(tmp.begin(), tmp.end());
+	it = adjacent_find(tmp.begin(), tmp.end());
+	if (it != tmp.end())
+	{
+		if (buff)
+			delete [] buff;
+		return (1);
+	}
+	return (0);
 }
 
 int	main(int argc, char **argv)
@@ -224,7 +249,7 @@ int	main(int argc, char **argv)
 	char	*input;
 	char	*buff;
 	std::vector<int>	vect;
-	std::vector<int>	main;
+
 	std::vector<int>	pending;
 	std::vector<int>::iterator	it;
 
@@ -248,6 +273,8 @@ int	main(int argc, char **argv)
 	std::cout << "\n\n";
 	if (vect.size() == 1)
 		return (std::cerr << "Error\nWrong amount of arguments" << std::endl, 1);
+	if (handleDuplicate(vect, it, buff))
+		return (std::cerr << "Error\nWrong input: duplicate" << std::endl, 1);
 	mergeInsert(vect, 1);
 	std::cout << "\nSorted list:\n";
 	for (it = vect.begin(); it != vect.end(); it++)
