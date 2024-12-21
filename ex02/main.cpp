@@ -6,7 +6,7 @@
 /*   By: ahayon <ahayon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 16:03:22 by eltouma           #+#    #+#             */
-/*   Updated: 2024/12/21 00:57:48 by eltouma          ###   ########.fr       */
+/*   Updated: 2024/12/21 01:37:05 by eltouma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,7 @@ void initPending(std::vector<int> &vect, int sizeElement, std::vector<std::pair<
 
 void	printGroup(std::vector<int> vect, int sizeElement, int nbOfGroups)
 {
-	std::cout << "sizeElement: " << sizeElement << " nbOfGroups: " << nbOfGroups << "\n";
+//	std::cout << "sizeElement: " << sizeElement << " nbOfGroups: " << nbOfGroups << "\n";
 	for (int i = 0; i < nbOfGroups; i++) {
 		std::cout << "{";
 		for (int j = 0; j < sizeElement * 2; j++) {
@@ -104,8 +104,8 @@ void	printGroup(std::vector<int> vect, int sizeElement, int nbOfGroups)
 			if (j < sizeElement * 2 - 1)
 				std::cout << ", ";
 		}
-		std::cout << "}";
-		if (i < nbOfGroups - 1) std::cout << ", ";
+		std::cout << "} ";
+	//	if (i < nbOfGroups - 1) std::cout << ", ";
 	}
 	std::cout << std::endl;
 }
@@ -128,19 +128,27 @@ void	sortPairs(std::vector<int> &vect, int sizeElement)
 	}
 	for (int i = 1; i <= nbOfGroups; i++)
 	{
+		if (vect[firstElement] < vect[lastElement])
+			std::cout << "{" << vect[firstElement] << ", " << vect[lastElement] << "} ";
 		if (vect[firstElement] > vect[lastElement])
+		{
 			for (int j = 0; j < sizeElement; j++)
 			{
 				std::swap(vect[firstElement - j], vect[lastElement - j]);
-//				std::cout << "\n";
-//				std::cout << vect[firstElement -j] << ", " << vect[lastElement -j];
+				std::cout << "{\033[1;36m" << vect[firstElement - j];
+				if (j < sizeElement * 2 - 1)
+				{
+					std::cout << ", " << vect[lastElement - j] << "\033[0m} ";
+					break ;
+				}
 			}
+		}
 		firstElement += sizeElement * 2;
 		lastElement += sizeElement * 2;
 	}
 	if (nbOfGroups)
 	{
-		std::cout << "Sorted pairs" << std::endl;
+		std::cout << "\nSorted pairs" << std::endl;
 		printGroup(vect, sizeElement, nbOfGroups);
 	}
 	std::cout << std::endl;
@@ -185,13 +193,14 @@ void	mergeInsert(std::vector<int> &vect, int sizeElement)
 	else
 		return ;
 	std::cout << "------------------------------------------------------------------------------------------------\n\n";
-	if (!pending.size())
-		std::cout << "No pend - no insertions. Move on" << std::endl;
+
 	std::cout << "\tvect.size() " << vect.size() << ", ";
 	std::cout << nbOfGroups << " groups of " << sizeElement * 2 << " elements\n";
 	std::cout << "iiiiiiiiiiiiiPrint original vector\n";
 	printGroup(vect, sizeElement, nbOfGroups);
 	initPending(vect, sizeElement, pending, nbOfGroups);
+	if (!pending.size())
+		std::cout << "No pend - no insertions. Move on" << std::endl;
 	std::cout << "Print pending\n";
 	printPending(pending);
 	int	prev_jacob = 1;
@@ -227,21 +236,6 @@ void	mergeInsert(std::vector<int> &vect, int sizeElement)
 	}
 	std::cout << "PRINT VECT TEST\n";
 	printGroup(vect, sizeElement, nbOfGroups);
-}
-
-int	handleDuplicate(std::vector<int> vect, std::vector<int>::iterator it, char *buff)
-{
-	std::vector<int>	tmp;
-	tmp.insert(tmp.begin(), vect.begin(), vect.end());
-	sort(tmp.begin(), tmp.end());
-	it = adjacent_find(tmp.begin(), tmp.end());
-	if (it != tmp.end())
-	{
-		if (buff)
-			delete [] buff;
-		return (1);
-	}
-	return (0);
 }
 
 int	main(int argc, char **argv)

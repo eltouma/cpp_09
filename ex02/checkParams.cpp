@@ -6,7 +6,7 @@
 /*   By: ahayon <ahayon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 16:03:22 by eltouma           #+#    #+#             */
-/*   Updated: 2024/12/18 12:37:43 by eltouma          ###   ########.fr       */
+/*   Updated: 2024/12/21 01:04:53 by eltouma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,3 +61,19 @@ char    *isString(int argc, char **argv, char *input, char *&buff)
                 input = strtok(argv[1], " ");
         return (input);
 }
+
+int	handleDuplicate(std::vector<int> vect, std::vector<int>::iterator it, char *buff)
+{
+	std::vector<int>	tmp;
+	tmp.insert(tmp.begin(), vect.begin(), vect.end());
+	sort(tmp.begin(), tmp.end());
+	it = adjacent_find(tmp.begin(), tmp.end());
+	if (it != tmp.end())
+	{
+		if (buff)
+			delete [] buff;
+		return (1);
+	}
+	return (0);
+}
+
