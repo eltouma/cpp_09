@@ -6,7 +6,7 @@
 /*   By: ahayon <ahayon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 16:03:22 by eltouma           #+#    #+#             */
-/*   Updated: 2024/12/21 05:20:46 by eltouma          ###   ########.fr       */
+/*   Updated: 2024/12/21 05:25:50 by eltouma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,10 @@ void	printGroup(std::vector<int> vect, int sizeElement, int nbOfGroups)
 			middle = sizeElement - 1;
 			last = sizeElement * 2 - 1;
 			if (sizeElement > 1 && (j == middle || j == last))
+//			if (j == middle || j == last)
 				std::cout << "\033[96m" << vect[i * sizeElement * 2 + j] << "\033[0m";
+//			else if (sizeElement == 1)
+//				std::cout << "\033[96m" << vect[i * sizeElement * 2] << "\033[0m";
 			else
 				std::cout << vect[i * sizeElement * 2 + j];
 			if (j < sizeElement * 2 - 1)
