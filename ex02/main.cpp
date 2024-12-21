@@ -6,7 +6,7 @@
 /*   By: ahayon <ahayon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 16:03:22 by eltouma           #+#    #+#             */
-/*   Updated: 2024/12/21 01:59:32 by eltouma          ###   ########.fr       */
+/*   Updated: 2024/12/21 03:59:36 by eltouma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,9 +48,8 @@ std::vector<int>::iterator	binarySearch(std::vector<int>::iterator start, std::v
 	}
 }
 
-void initPending(std::vector<int> &vect, int sizeElement, std::vector<std::pair<std::vector<int>, int> > &pending, int nbOfGroups)
+void	initPending(std::vector<int> &vect, int sizeElement, std::vector<std::pair<std::vector<int>, int> > &pending, int nbOfGroups)
 {
-	(void)nbOfGroups;
 	int	nbElements;
 	int	nbElementsToPush;
 	std::vector<int>::iterator firstValGroup;
@@ -60,7 +59,7 @@ void initPending(std::vector<int> &vect, int sizeElement, std::vector<std::pair<
 	nbElementsToPush = (nbElements / 2) - 1;
 	if (nbElements & 1)
 		nbElementsToPush += 1;
-	std::cout << "\t" << __func__ << "\n";
+	std::cout << "\n\t" << __func__ << "\n";
 	std::cout << "\n\033[1;36mVVVVVVvect.size() \033[0m" << vect.size() << " sizeElement " << sizeElement << "\n";
 	std::cout << "nbElements " << nbElements << ", nbElementsToPush " << nbElementsToPush << "\n";
 	firstValGroup = vect.begin() + sizeElement * 2;
@@ -72,8 +71,10 @@ void initPending(std::vector<int> &vect, int sizeElement, std::vector<std::pair<
 	{
 		std::pair<std::vector<int>, int> tmpPair;
 		lastValGroup = firstValGroup + sizeElement - 1;
+		std::cout << "lastValGroup " << *lastValGroup << " end " << *(vect.end() - 1) << "\n";
 		std::cout << "ATTENTION TOUT LE MONDE JE FAIL\n";
-		printGroup(vect, sizeElement, nbOfGroups / 2);
+		printGroup(vect, sizeElement, nbOfGroups);
+		printOdd(vect, sizeElement);
 		std::cout << "lastValGroup " << *lastValGroup << " end " << *(vect.end() - 1) << "\n";
 		tmpPair.first.insert(tmpPair.first.begin(), firstValGroup, lastValGroup + 1);
 		if (vect.end() - 1 != lastValGroup)
@@ -89,22 +90,7 @@ void initPending(std::vector<int> &vect, int sizeElement, std::vector<std::pair<
 	}
 	std::cout << "LE PENDING MESSIEURS DAMES" << "\n";
 	printPending(pending);
-}
-
-void	printGroup(std::vector<int> vect, int sizeElement, int nbOfGroups)
-{
-	std::cout << "sizeElement: " << sizeElement << " nbOfGroups: " << nbOfGroups << "\n";
-	for (int i = 0; i < nbOfGroups; i++) {
-		std::cout << "{";
-		for (int j = 0; j < sizeElement * 2; j++) {
-			std::cout << vect[i * sizeElement * 2 + j];
-			if (j < sizeElement * 2 - 1)
-				std::cout << ", ";
-		}
-		std::cout << "} ";
-		//	if (i < nbOfGroups - 1) std::cout << ", ";
-	}
-//	std::cout << std::endl;
+	std::cout << std::endl;
 }
 
 void	sortPairs(std::vector<int> &vect, int sizeElement)
@@ -153,30 +139,6 @@ void	sortPairs(std::vector<int> &vect, int sizeElement)
 	std::cout << std::endl;
 }
 
-void	printPending(std::vector<std::pair<std::vector<int>, int> > pending)
-{
-	for (size_t i = 0; i < pending.size(); i++)
-	{
-		std::cout << "{\033[33m";
-		for (size_t j = 0; j < pending[i].first.size(); j++)
-		{
-			std::cout << " " << pending[i].first.at(j);
-		}
-		//		std::cout << "}";
-		std::cout << " \033[0m}";
-		//	std::cout << " \033[0msecond: " << pending[i].second << "\n";
-	}
-
-}
-
-void	printVect(std::vector<int> vect)
-{
-	std::cout << "LE vect: " << std::endl;
-	for (size_t i = 0; i < vect.size(); i++)
-		std::cout << vect[i] << " ";
-	std::cout << "\n\n";
-
-}
 
 void	mergeInsert(std::vector<int> &vect, int sizeElement)
 {
@@ -198,19 +160,11 @@ void	mergeInsert(std::vector<int> &vect, int sizeElement)
 
 	std::cout << "iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiPrint original vector\n";
 	printGroup(vect, sizeElement, nbOfGroups);
-	int remainingSize = vect.size() % (sizeElement * 2);
-	if (remainingSize > 0) {
-		for (size_t i = vect.size() - remainingSize; i < vect.size(); ++i) {
-			std::cout << "\033[1;90m" << vect[i];
-			if (i < vect.size() - 1)
-				std::cout << ", ";
-			std::cout << "\033[0m";
-		}
-	}
+	printOdd(vect, sizeElement);
 	initPending(vect, sizeElement, pending, nbOfGroups);
 	if (!pending.size())
 		std::cout << "No pend - no insertions. Move on" << std::endl;
-	std::cout << "Print pending\n";
+	std::cout << "\nPrint pending\n";
 	printPending(pending);
 	int	prev_jacob = 1;
 	int	next_jacob = jacobNumber(jacobIn);
@@ -245,6 +199,7 @@ void	mergeInsert(std::vector<int> &vect, int sizeElement)
 	}
 	std::cout << "PRINT VECT TEST\n";
 	printGroup(vect, sizeElement, nbOfGroups);
+	std::cout << std::endl;
 }
 
 int	main(int argc, char **argv)

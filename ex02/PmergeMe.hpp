@@ -6,7 +6,7 @@
 /*   By: eltouma <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 17:08:34 by eltouma           #+#    #+#             */
-/*   Updated: 2024/12/21 01:39:32 by eltouma          ###   ########.fr       */
+/*   Updated: 2024/12/21 03:36:11 by eltouma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,3 +28,4 @@ int	handleDuplicate(std::vector<int> vect, std::vector<int>::iterator it, char *
 void	printVect(std::vector<int> vect);
 void	printGroup(std::vector<int> vect, int sizeElement, int nbOfGroups);
 void	printPending(std::vector<std::pair<std::vector<int>, int> > pending);
+void	printOdd(std::vector<int> vect, int sizeElement);
