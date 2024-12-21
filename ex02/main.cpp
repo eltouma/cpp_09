@@ -6,7 +6,7 @@
 /*   By: ahayon <ahayon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 16:03:22 by eltouma           #+#    #+#             */
-/*   Updated: 2024/12/21 03:59:36 by eltouma          ###   ########.fr       */
+/*   Updated: 2024/12/21 04:25:43 by eltouma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,16 +149,16 @@ void	mergeInsert(std::vector<int> &vect, int sizeElement)
 	std::vector<int>::iterator insertIt;
 
 	sortPairs(vect, sizeElement);
-	if (vect.size() / sizeElement > 2)
+	if (vect.size() / sizeElement >= 2)
 		mergeInsert(vect, sizeElement * 2);
 	else
 		return ;
 	std::cout << "------------------------------------------------------------------------------------------------\n\n";
 
-	std::cout << "\tvect.size() " << vect.size() << ", ";
-	std::cout << nbOfGroups << " groups of " << sizeElement * 2 << " elements\n";
+	//std::cout << "\tvect.size() " << vect.size() << ", ";
+//	std::cout << nbOfGroups << " groups of " << sizeElement * 2 << " elements\n";
 
-	std::cout << "iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiPrint original vector\n";
+	draw_tab("Current vector ");
 	printGroup(vect, sizeElement, nbOfGroups);
 	printOdd(vect, sizeElement);
 	initPending(vect, sizeElement, pending, nbOfGroups);
