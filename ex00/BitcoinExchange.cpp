@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   BitcoinExchange.cpp                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahayon <ahayon@student.42.fr>              +#+  +:+       +#+        */
+/*   By: skiam <skiam@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 13:52:02 by ahayon            #+#    #+#             */
-/*   Updated: 2024/12/06 13:19:45 by ahayon           ###   ########.fr       */
+/*   Updated: 2025/01/03 18:18:34 by skiam            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,11 +77,13 @@ void	BitcoinExchange::loadInputFile(std::string filename) {
 	std::string		line;
 	std::map<std::string, float>::iterator it;
 	
-	if (!file.is_open()) {
-		std::cerr << "Error opening the .txt file" << std::endl;
-		return ;
-	}
-	
+	if (!file.is_open()) 
+		{std::cerr << "Error opening the file" << std::endl; return ;}
+	getline(file, line);
+	if (!line[0])
+		{std::cerr << "Error: file is empty" << std::endl; return ;}
+	if (line != "date | value")
+		{std::cerr << "Error: invalid format, no header" << std::endl; return ;}
 	while (getline(file, line, '\n')) {
 		char	*end;
 		std::string::size_type 	pos = line.find('|');
@@ -93,6 +95,10 @@ void	BitcoinExchange::loadInputFile(std::string filename) {
 				std::cerr << "Error: Invalid date" << std::endl;
 			else {
 				float	value = std::strtof((line.substr(pos + 1)).c_str(), &end);
+				if (value < 0)
+					{std::cerr << "Error: not a positive number" << std::endl; continue;}
+				else if (value > 1000)
+					{std::cerr << "Error: too large a number" << std::endl; continue;}
 				if (*end != '\0')
 					std::cerr << "Error: wrong value type" << std::endl;
 				else {
