@@ -6,7 +6,7 @@
 /*   By: skiam <skiam@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 01:12:30 by skiam             #+#    #+#             */
-/*   Updated: 2025/01/06 01:12:32 by skiam            ###   ########.fr       */
+/*   Updated: 2025/01/06 21:36:53 by skiam            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	printGroup(std::vector<int> vect, int sizeElement, int nbOfGroups)
 {
 	int	middle;
 	int	last;
-//	std::cout << "sizeElement: " << sizeElement << " nbOfGroups: " << nbOfGroups << "\n";
+	std::cout << "sizeElement: " << sizeElement << " nbOfGroups: " << nbOfGroups << "\n";
 	for (int i = 0; i < nbOfGroups; i++)
 	{
 		std::cout << "{";

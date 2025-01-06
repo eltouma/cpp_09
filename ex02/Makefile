@@ -1,33 +1,24 @@
+SRC =	main.cpp checkParams.cpp print.cpp PmergeMe.cpp
+OBJ = $(SRC:.cpp=.o)
+CC = c++
+RM = rm -f
+CPPFLAGS = -Wall -Wextra -Werror -std=c++98 -g
+
 NAME = PmergeMe
-
-CC = c++ -Wall -Wextra -Werror -std=c++98 -g3
-MAKEFLAGS += --no-print-directory
-
-GREEN := \e[32m
-RESET :=\e[0m
-
-SRCS = checkParams.cpp PmergeMeAntoine.cpp
-
-OBJS_PATH = objs/
-
-OBJS = $(addprefix $(OBJS_PATH), $(SRCS:%.cpp=%.o))
-
 all: $(NAME)
 
-$(OBJS_PATH)%.o: %.cpp
-	@mkdir -p $(OBJS_PATH)
-	$(CC) -c $< -o $@
+$(NAME): $(OBJ)
+	$(CC) $(CPPFLAGS) $(OBJ) -o $(NAME)
 
-$(NAME): $(OBJS)
-	@echo "\nCompilation PmergeMe: $(GREEN)success$(RESET)\n"
-	$(CC) $(OBJS) -o $(NAME)
+%.o: %.cpp
+	$(CC) $(CPPFLAGS) -c $< -o $@
 
 clean:
-	/bin/rm -rf $(OBJS) $(OBJS_PATH)
-	@echo "\nPmergeMe removed: $(GREEN)success$(RESET)\n"
-fclean:	clean
-	/bin/rm -rf ${NAME}
+	$(RM) $(OBJ)
 
-re: fclean all
+fclean: clean
+	$(RM) $(NAME)
+
+re: fclean $(NAME)
 
 .PHONY: all clean fclean re

@@ -6,25 +6,24 @@
 /*   By: skiam <skiam@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 01:11:52 by skiam             #+#    #+#             */
-/*   Updated: 2025/01/06 01:11:54 by skiam            ###   ########.fr       */
+/*   Updated: 2025/01/06 22:49:41 by skiam            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 
 #include "PmergeMe.hpp" 
 
-int	checkInput(char *s, std::vector<int> &vect)
+int	check_input(char *s, std::vector<int> &vect)
 {
 	std::string	str;
 	long	nb;
 	char	*endptr;
 
 	str = s;
-	errno = 0;
 	nb = strtol(str.c_str(), &endptr, 10);
 	if (endptr == str.c_str() || *endptr != '\0')
 		return (1);
-	if (errno == ERANGE || nb < 0 || nb > INT_MAX)
+	if (nb < 0 || nb > INT_MAX)
 		return (1);
 	vect.push_back(nb);
 	return (0);
@@ -63,7 +62,7 @@ char    *isString(int argc, char **argv, char *input, char *&buff)
         return (input);
 }
 
-int	handleDuplicate(std::vector<int> vect, std::vector<int>::iterator it, char *buff)
+int	handle_dup(std::vector<int> vect, std::vector<int>::iterator it, char *buff)
 {
 	std::vector<int>	tmp;
 	tmp.insert(tmp.begin(), vect.begin(), vect.end());
