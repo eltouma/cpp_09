@@ -6,7 +6,7 @@
 /*   By: skiam <skiam@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 18:30:09 by skiam             #+#    #+#             */
-/*   Updated: 2025/01/06 22:10:17 by skiam            ###   ########.fr       */
+/*   Updated: 2025/01/07 00:53:20 by skiam            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ int	jacobsthal(int n)
 	return jacob[n];
 }
 
-std::vector<int>::iterator	binary_search(std::vector<int>::iterator start, std::vector<int>::iterator end, int elemSize, int valToFind)
+std::vector<int>::iterator	binary_search_vect(std::vector<int>::iterator start, std::vector<int>::iterator end, int elemSize, int valToFind)
 {
 	std::vector<int>::iterator	it;
 	size_t	mid;
@@ -34,7 +34,7 @@ std::vector<int>::iterator	binary_search(std::vector<int>::iterator start, std::
 //			std::cout << "it: " << *it << " == start: " << *start << std::endl;
 			return (start - (elemSize - 1));
 		}
-		return binary_search(start, it - elemSize, elemSize, valToFind);
+		return binary_search_vect(start, it - elemSize, elemSize, valToFind);
 	}
 	else
 	{
@@ -43,11 +43,11 @@ std::vector<int>::iterator	binary_search(std::vector<int>::iterator start, std::
 //			std::cout << "it: " << *it << " == end: " << *end << std::endl;
 			return (end + 1);
 		}
-		return binary_search(it + elemSize, end, elemSize, valToFind);
+		return binary_search_vect(it + elemSize, end, elemSize, valToFind);
 	}
 }
 
-void	init_pending(std::vector<int> &vect, int elemSize, std::vector<std::pair<std::vector<int>, int> > &pending)
+void	init_pending_vect(std::vector<int> &vect, int elemSize, std::vector<std::pair<std::vector<int>, int> > &pending)
 {
 	int	nbElements;
 	int	nbElementsToPush;
@@ -78,7 +78,7 @@ void	init_pending(std::vector<int> &vect, int elemSize, std::vector<std::pair<st
 }
 
 
-void	sort_pairs(std::vector<int> &vect, int elemSize)
+void	sort_pairs_vect(std::vector<int> &vect, int elemSize)
 {
 	int	nbOfGroups;
 	int	firstElement;
@@ -105,7 +105,7 @@ void	sort_pairs(std::vector<int> &vect, int elemSize)
 }
 
 
-void	merge_insert(std::vector<int> &vect, int elemSize)
+void	merge_insert_vect(std::vector<int> &vect, int elemSize)
 {
 	int nbOfGroups = vect.size() / (elemSize * 2);
 	int	jacobIn = 0;
@@ -113,9 +113,9 @@ void	merge_insert(std::vector<int> &vect, int elemSize)
 	std::vector<int>::iterator end;
 	std::vector<int>::iterator insertIt;
 
-	sort_pairs(vect, elemSize);
+	sort_pairs_vect(vect, elemSize);
 	if (vect.size() / elemSize >= 2)
-		merge_insert(vect, elemSize * 2);
+		merge_insert_vect(vect, elemSize * 2);
 	else
 		return  ;
 
@@ -125,7 +125,7 @@ void	merge_insert(std::vector<int> &vect, int elemSize)
 	draw_tab("Current vector");
 	printGroup(vect, elemSize, nbOfGroups);
 	printOdd(vect, elemSize);
-	init_pending(vect, elemSize, pending);
+	init_pending_vect(vect, elemSize, pending);
 	if (!pending.size())
 		std::cout << "No pend - no insertions. Move on" << std::endl;
 	else
@@ -158,7 +158,7 @@ void	merge_insert(std::vector<int> &vect, int elemSize)
 //			std::cout << "\033[1;31mend == -1; " << *end << " elemSize = " << elemSize << " \033[0m\n";
 			//			printGroup(vect, elemSize, nbOfGroups);
 		}
-		insertIt = binary_search(vect.begin() + elemSize - 1, end, elemSize, pending[insertIndex].first.back());
+		insertIt = binary_search_vect(vect.begin() + elemSize - 1, end, elemSize, pending[insertIndex].first.back());
 //		std::cout << "insertIt " << *insertIt << " pending[insertIndex].first.begin() " << *pending[insertIndex].first.begin() << " pending[insertIndex].first.end() " << *(pending[insertIndex].first.end() - 1) << "\n";
 		vect.insert(insertIt, pending[insertIndex].first.begin(), pending[insertIndex].first.end());
 		pending.erase(pending.begin() + insertIndex);
@@ -170,5 +170,130 @@ void	merge_insert(std::vector<int> &vect, int elemSize)
 	draw_tab("New vector");
 	printGroup(vect, elemSize, nbOfGroups);
 	printOdd(vect, elemSize);
+	std::cout << std::endl;
+}
+
+
+//							--------------------------DEQUE----------------------------
+
+std::deque<int>::iterator	binary_search_deq(std::deque<int>::iterator start, std::deque<int>::iterator end, int elemSize, int valToFind)
+{
+	std::deque<int>::iterator	it;
+	size_t	mid;
+
+	mid  = std::distance(start, end) / elemSize / 2;
+	it = start + mid * elemSize;
+	if (valToFind <	*it)
+	{
+		if (it == start)
+			return (start - (elemSize - 1));
+		return binary_search_deq(start, it - elemSize, elemSize, valToFind);
+	}
+	else
+	{
+		if (it == end)
+			return (end + 1);
+		return binary_search_deq(it + elemSize, end, elemSize, valToFind);
+	}
+}
+
+void	init_pending_deq(std::deque<int> &vect, int elemSize, std::deque<std::pair<std::deque<int>, int> > &pending)
+{
+	int	nbElements;
+	int	nbElementsToPush;
+	std::deque<int>::iterator firstValGroup;
+	std::deque<int>::iterator lastValGroup;
+
+	nbElements = vect.size() / elemSize;
+	nbElementsToPush = (nbElements / 2) - 1;
+	if (nbElements & 1)
+		nbElementsToPush += 1;
+	firstValGroup = vect.begin() + elemSize * 2;
+	if (!nbElementsToPush)
+		return ;
+	for (int i = 0; i < nbElementsToPush; i++)
+	{
+		std::pair<std::deque<int>, int> tmpPair;
+		lastValGroup = firstValGroup + elemSize - 1;
+		tmpPair.first.insert(tmpPair.first.begin(), firstValGroup, lastValGroup + 1);
+		if (vect.end() - 1 != lastValGroup)
+			tmpPair.second = *(lastValGroup + 1);
+		else
+			tmpPair.second = -1;
+		pending.push_back(tmpPair);
+		firstValGroup = vect.erase(firstValGroup, lastValGroup + 1);
+		firstValGroup += elemSize;
+	}
+	std::cout << std::endl;
+}
+
+
+void	sort_pairs_deq(std::deque<int> &vect, int elemSize)
+{
+	int	nbOfGroups;
+	int	firstElement;
+	int	lastElement;
+
+
+	nbOfGroups = vect.size() / (elemSize * 2);
+	std::cout << "Number of groups " << nbOfGroups << std::endl;
+	firstElement = elemSize - 1;
+	lastElement = elemSize - 1 + elemSize;
+	std::cout << "Original pairs" << std::endl;
+	for (int i = 1; i <= nbOfGroups; i++)
+	{
+		if (vect[firstElement] > vect[lastElement])
+			for (int j = 0; j < elemSize; j++)
+				std::swap(vect[firstElement - j], vect[lastElement - j]);
+		firstElement += elemSize * 2;
+		lastElement += elemSize * 2;
+	}
+	std::cout << "Sorted pairs" << std::endl;
+	std::cout << std::endl;
+}
+
+
+void	merge_insert_deq(std::deque<int> &vect, int elemSize)
+{
+	//int nbOfGroups = vect.size() / (elemSize * 2);
+	int	jacobIn = 0;
+	std::deque<std::pair<std::deque<int>, int> > pending;
+	std::deque<int>::iterator end;
+	std::deque<int>::iterator insertIt;
+
+	sort_pairs_deq(vect, elemSize);
+	if (vect.size() / elemSize >= 2)
+		merge_insert_deq(vect, elemSize * 2);
+	else
+		return  ;
+	init_pending_deq(vect, elemSize, pending);
+	int	prev_jacob = 1;
+	int	next_jacob = jacobsthal(jacobIn);
+	jacobIn++;
+	size_t	insertIndex;
+	while (pending.size())
+	{
+		if (next_jacob <= prev_jacob) 
+		{
+			prev_jacob = next_jacob;
+			next_jacob = jacobsthal(jacobIn);
+			jacobIn++;
+		}
+		insertIndex = next_jacob - prev_jacob;
+		if (insertIndex > pending.size())
+			insertIndex = pending.size();
+		insertIndex -= 1;
+		end = find(vect.begin(), vect.end(), pending[insertIndex].second) - 1;
+		if (pending[insertIndex].second == -1)
+		{
+//			std::cout << "\033[1;31mend == -1; " << *end << " elemSize = " << elemSize << " \033[0m\n";
+			//			printGroup(vect, elemSize, nbOfGroups);
+		}
+		insertIt = binary_search_deq(vect.begin() + elemSize - 1, end, elemSize, pending[insertIndex].first.back());
+		vect.insert(insertIt, pending[insertIndex].first.begin(), pending[insertIndex].first.end());
+		pending.erase(pending.begin() + insertIndex);
+		next_jacob -= 1;
+	}
+	std::cout << std::endl;
 	std::cout << std::endl;
 }

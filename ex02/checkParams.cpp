@@ -6,14 +6,14 @@
 /*   By: skiam <skiam@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 01:11:52 by skiam             #+#    #+#             */
-/*   Updated: 2025/01/06 22:49:41 by skiam            ###   ########.fr       */
+/*   Updated: 2025/01/07 00:13:33 by skiam            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 
 #include "PmergeMe.hpp" 
 
-int	check_input(char *s, std::vector<int> &vect)
+int	check_input(char *s, std::vector<int> &vect, std::deque<int> &deque)
 {
 	std::string	str;
 	long	nb;
@@ -26,6 +26,7 @@ int	check_input(char *s, std::vector<int> &vect)
 	if (nb < 0 || nb > INT_MAX)
 		return (1);
 	vect.push_back(nb);
+	deque.push_back(nb);
 	return (0);
 }
 
