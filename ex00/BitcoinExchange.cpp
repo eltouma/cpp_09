@@ -6,7 +6,7 @@
 /*   By: skiam <skiam@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 13:52:02 by ahayon            #+#    #+#             */
-/*   Updated: 2025/01/03 18:18:34 by skiam            ###   ########.fr       */
+/*   Updated: 2025/01/06 00:42:30 by skiam            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,16 +27,15 @@ BitcoinExchange& BitcoinExchange::operator=(const BitcoinExchange& rhs) {
 
 void	BitcoinExchange::loadDataBase(std::string filename) {
 	std::ifstream	file(filename.c_str());
-	if (!file.is_open()) {
-		std::cerr << "Error opening the .csv file" << std::endl;
-		return ;
-	}
+	if (!file.is_open()) 
+		{std::cerr << "Error opening the .csv file" << std::endl; return ;}
+
 	std::string	line;
 	while (getline(file, line, '\n')) {
 		char	*end;
-		std::string::size_type 	pos = line.find(',');
-		std::string 			date = line.substr(0, pos);
-		float					rate = std::strtof((line.substr(pos + 1)).c_str(), &end);
+		size_t 			pos = line.find(',');
+		std::string 	date = line.substr(0, pos);
+		float			rate = std::strtof((line.substr(pos + 1)).c_str(), &end);
 		this->_dataBase[date] = rate;
 	}
 }

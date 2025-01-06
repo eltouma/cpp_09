@@ -3,12 +3,13 @@
 /*                                                        :::      ::::::::   */
 /*   checkParams.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahayon <ahayon@student.42.fr>              +#+  +:+       +#+        */
+/*   By: skiam <skiam@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/05 16:03:22 by eltouma           #+#    #+#             */
-/*   Updated: 2024/12/21 01:04:53 by eltouma          ###   ########.fr       */
+/*   Created: 2025/01/06 01:11:52 by skiam             #+#    #+#             */
+/*   Updated: 2025/01/06 01:11:54 by skiam            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 
 #include "PmergeMe.hpp" 
 
@@ -55,7 +56,7 @@ char    *isString(int argc, char **argv, char *input, char *&buff)
                 }
                 buff = new char[str.size() + 1];
                 dup = strcpy(buff, str.c_str());
-                input = strtok(buff, " ");
+                input = strtok(dup, " ");
         }
         else
                 input = strtok(argv[1], " ");
